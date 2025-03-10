@@ -28,7 +28,7 @@ This project incorporates code licensed under the **MIT License**.
 ## **2️⃣ Apache License 2.0**
 This project also includes code licensed under the **Apache License 2.0**.  
 
-## <center> [SAM](https://github.com/facebookresearch/segment-anything/blob/main/LICENSE) </center>
+**Original Project:** [Segment Anything (SAM)](https://github.com/facebookresearch/segment-anything/blob/main/LICENSE) </center>
 <div align=center>
 
 
