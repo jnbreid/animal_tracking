@@ -19,7 +19,7 @@ This project incorporates code licensed under the **MIT License**.
 
 **Original Project:** [Pytorch-Wildlife](https://github.com/microsoft/CameraTraps/blob/main/LICENSE)  
 
-
+ 
 MIT License
 
 Copyright (c) [2023] [Microsoft]
@@ -52,10 +52,12 @@ This project also includes code licensed under the **Apache License 2.0**.
 
 **Original Project:** [Segment Anything (SAM)](https://github.com/facebookresearch/segment-anything/blob/main/LICENSE)
 
-
-                                 Apache License
-                           Version 2.0, January 2004
-                        http://www.apache.org/licenses/
+   </center>
+<div align=center>
+Apache License
+Version 2.0, January 2004
+ http://www.apache.org/licenses/           
+</div>
 
    TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
 
