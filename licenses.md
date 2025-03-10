@@ -52,12 +52,10 @@ This project also includes code licensed under the **Apache License 2.0**.
 
 **Original Project:** [Segment Anything (SAM)](https://github.com/facebookresearch/segment-anything/blob/main/LICENSE)
 
-   </center>
-<div align=center>
-Apache License
-Version 2.0, January 2004
- http://www.apache.org/licenses/           
-</div>
+ ~~~text
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
 
    TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
 
@@ -257,7 +255,7 @@ Version 2.0, January 2004
    See the License for the specific language governing permissions and
    limitations under the License.
 
-
+~~~text
 
 
 ### **Apache License 2.0 Required Notice**
