@@ -7,7 +7,7 @@ This project includes code from third-party projects under the following license
 ## **1️⃣ MIT License**
 This project incorporates code licensed under the **MIT License**.  
 
-**Original Project:** [Project Name](URL to the original project)  
+**Original Project:** [Pytorch-Wildlife](https://github.com/microsoft/CameraTraps/blob/main/LICENSE)  
 
 
 
@@ -28,7 +28,7 @@ This project incorporates code licensed under the **MIT License**.
 ## **2️⃣ Apache License 2.0**
 This project also includes code licensed under the **Apache License 2.0**.  
 
-**Original Project:** [Project Name](URL to the original project)  
+**Original Project:** [Segment Anything (SAM)](URL to the original project)  
 
 
 
