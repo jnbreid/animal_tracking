@@ -2,7 +2,7 @@
 import torch
 from torch import nn
 
-class N3_5_5_1(nn.Module):
+class DistNet(nn.Module):
   def __init__(self):
     super().__init__()
     self.lin_relu = nn.Sequential(

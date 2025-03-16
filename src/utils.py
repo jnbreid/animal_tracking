@@ -9,7 +9,7 @@ def linear_assignment(cost_matrix):
     x, y = linear_sum_assignment(cost_matrix)
     return np.array(list(zip(x, y)))
 
-def iou_batch_s(bb_test, bb_gt):#bb_test, bb_gt):
+def iou_batch(bb_test, bb_gt):#bb_test, bb_gt):
   """
   From SORT: Computes IOU between two bboxes in the form [x1,y1,x2,y2]
   (this function is taken from https://github.com/abewley/sort/blob/master/sort.py)
@@ -30,9 +30,6 @@ def iou_batch_s(bb_test, bb_gt):#bb_test, bb_gt):
 
   return(o)
 
-# wrapperfunction to ensure replacability with iou_mask function
-
-def iou_batch(bb_test, mask_test, bb_gt, mask_gt):
   return iou_batch_s(bb_test, bb_gt)
   
 
