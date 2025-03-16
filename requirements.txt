@@ -1,7 +1,8 @@
-PytorchWildlife
+
 torch
 torchvision
 torchaudio
+numpy
 tqdm
 Pillow
 supervision==0.23.0
@@ -24,4 +25,4 @@ filterpy==1.4.5
 scikit-image==0.17.2
 pycocotools
 moviepy
-numpy
+PytorchWildlife
