@@ -82,9 +82,9 @@ def megadetector_wrapper(object):
         self.device = device
 
     def __call__(self, image):
-        transform = T.Compose([T.Resize([224, 224]),
-                            T.ToTensor(),
-                            T.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))])
+        transform = T.Compose([T.ToTensor(),
+                               T.Resize([224, 224]),
+                               T.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))])
         input = transform(image).unsqueeze(0).to(self.device)
         output = self.megadescriptor(input)
         return output
