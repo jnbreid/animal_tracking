@@ -29,13 +29,19 @@ class megadetector_wrapper(object):
         detections = out['detections']
         boxes = np.asarray(detections.xyxy, dtype = np.int32)
         labels = np.asarray(detections.class_id, dtype = np.int32)
-        confidence = np.asarray(detections.confidence)
+        confidences = np.asarray(detections.confidence)
         for i in range(boxes.shape[0]):
             if labels[i] == 0: # remove all other found classes
                 box = boxes[i,:]
+                conf = confidences[i]
                 an_boxes.append(box)
+                an_confidences.append(conf)
         
-        return np.asarray(an_boxes, dtype=np.int32), confidence
+        boxes = np.asarray(an_boxes, dtype=np.int32)
+        boxes[:,2] = boxes[:,2]-boxes[:,0]
+        boxes[:,3] = boxes[:,3]-boxes[:,1]
+
+        return boxes, np.asarray(an_confidences)
 
 
 

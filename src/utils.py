@@ -215,11 +215,18 @@ def overlay(image, mask, color, alpha, resize=None):
     return image_combined
 
 
+def merge_masks_fast(org_mask, merge_mask, n_id):
+  ind = np.where(org_mask==0)
+
+  org_mask[ind] = merge_mask[ind]*n_id
+
+  return org_mask
+
 
 import matplotlib.colors
 import matplotlib.pyplot as plt
 """
-class containing code for 64 different colors for visualization
+class containing code for 63 different colors for visualization
 can return colors in RGB format
 """
 class col_list():
@@ -237,10 +244,15 @@ class col_list():
       self.colors.append(col)
     return
 
+  def get_color(self, id):
+     color = self.colors[int(id%62)]
+     return color
 
+  """
   def get_color(self):
     color = self.colors[self.counter]
     self.counter = self.counter + 1
     if self.counter > len(self.colors)-1:
       self.counter = 0
     return color
+  """
