@@ -2,19 +2,26 @@
 import numpy as np
 import cv2
 
-from utils_loader import get_detector, get_segmentor, get_extractor, 
+from utils_loader import get_detector, get_segmentor, get_extractor, get_DistNet
 from utils import overlay, col_list
 from track import Tracker
 
 
-def infer_video(visualize = True, 
+def infer_video(img_seq, 
+                confidences = None,
+                bbox = None,
+                c_id = None,
+                visualize = True, 
                 box_file = True, 
                 seg_file = True, 
                 save_dir = 'out_dir', 
+                distnet = None,
                 detector = None, 
                 extractor = None, 
                 segmentor = None, 
-                device = None):
+                device = None, 
+                refine = True, 
+                dist_mode = 'default'):
     
     if device is None:
         device = 'cpu'
@@ -25,27 +32,25 @@ def infer_video(visualize = True,
         extractor = get_extractor()
     if segmentor is None:
         segmentor = get_segmentor()
-    return 0
+    if distnet is None:
+        distnet = get_DistNet()
+    
+
+    mot_tracker = Tracker(distnet, max_age = 15, min_hits = 3, iou_threshold = 0.1)
+    colors = col_list()
 
 
-refine = True
+    if box_file == True:
+        full_tracks = []
+
+    for i in range(len(img_seq)):
 
 
-elem = e
-print(f'{elem+1}/{dset.__len__()}')
 
 
 
 img_seq, confidences, bbox, c_id = dset.__getitem__(elem)
 
-
-mot_tracker = Tracker(model, max_age=20, min_hits=3, iou_threshold=0.1)
-
-colors = col_list()
-
-full_tracks = []
-
-colors = col_list()
 
 for i in range(len(confidences)):
 full_detect = []

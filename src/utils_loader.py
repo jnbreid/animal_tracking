@@ -13,6 +13,8 @@ from PytorchWildlife import utils as pw_utils
 from PIL import Image
 from urllib.request import urlopen
 
+from model import DistNet_t
+
 
 class megadetector_wrapper(object):
   
@@ -104,3 +106,24 @@ def get_extractor(device = None):
     extractor = megadetector_wrapper(megadescriptor, device)
 
     return extractor
+
+"""
+function to load distnet model
+"""
+def get_DistNet(device = None, weight_path = None):
+    if device is None:
+        device = 'cpu'
+    
+    model = DistNet_t()
+    model.eval()
+    model.to(device)
+
+    if weight_path is None:
+        return model
+    
+    model.load_state_dict(torch.load(weight_path, weights_only=True))
+    model.eval()    
+
+    return model
+
+    

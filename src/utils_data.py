@@ -9,7 +9,7 @@ def read_mp4(file_path):
   vid_len = video.get(cv2.CAP_PROP_FRAME_COUNT)
   for i in range(vid_len):
     ret, fr = video.read()
-    frames.append(fr)
+    frames.append(cv2.cvtColor(fr, cv2.COLOR_BGR2RGB))
 
   return frames
 
