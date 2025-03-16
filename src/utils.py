@@ -29,8 +29,6 @@ def iou_batch(bb_test, bb_gt):#bb_test, bb_gt):
     + (bb_gt[..., 2] - bb_gt[..., 0]) * (bb_gt[..., 3] - bb_gt[..., 1]) - wh)
 
   return(o)
-
-  return iou_batch_s(bb_test, bb_gt)
   
 
 """
@@ -194,3 +192,22 @@ def insert_mask(cut_mask, bbox, insert_array):
     insert_array[y0:y0+cut_resize_mask.shape[0], x0:x0+cut_resize_mask.shape[1]] = cut_resize_mask# resize_mask
 
     return insert_array
+
+"""
+function to overlay a mask onto a picture
+"""
+def overlay(image, mask, color, alpha, resize=None):
+
+    color = color[::-1]
+    colored_mask = np.expand_dims(mask, 0).repeat(3, axis=0)
+    colored_mask = np.moveaxis(colored_mask, 0, -1)
+    masked = np.ma.MaskedArray(image, mask=colored_mask, fill_value=color)
+    image_overlay = masked.filled()
+
+    if resize is not None:
+        image = cv2.resize(image.transpose(1, 2, 0), resize)
+        image_overlay = cv2.resize(image_overlay.transpose(1, 2, 0), resize)
+
+    image_combined = cv2.addWeighted(image, 1 - alpha, image_overlay, alpha, 0)
+
+    return image_combined
