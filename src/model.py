@@ -19,3 +19,4 @@ class DistNet(nn.Module):
     x = self.lin_relu(x)
     x = self.sigmoid(x)
     return x
+    
