@@ -1,5 +1,6 @@
 
 import cv2
+import moviepy.video.io.ImageSequenceClip
 
 def read_mp4(file_path):
   frames = []
@@ -11,3 +12,9 @@ def read_mp4(file_path):
     frames.append(fr)
 
   return frames
+
+
+def write_mp4(file_path, imgpaths_list, fps = 16):
+    clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(imgpaths_list, fps=fps)
+    clip.write_videofile(file_path)
+    return True
