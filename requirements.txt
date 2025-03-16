@@ -1,8 +1,6 @@
-
 torch
 torchvision
 torchaudio
-numpy
 tqdm
 Pillow
 supervision==0.23.0
