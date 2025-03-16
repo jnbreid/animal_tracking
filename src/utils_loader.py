@@ -24,16 +24,18 @@ class megadetector_wrapper(object):
     # image must bei in rgb (c,h,w) format
     def __call__(self, image):
         an_boxes = []
+        an_confidences = []
         out = self.megadetector.single_image_detection(image)
         detections = out['detections']
         boxes = np.asarray(detections.xyxy, dtype = np.int32)
         labels = np.asarray(detections.class_id, dtype = np.int32)
+        confidence = np.asarray(detections.confidence)
         for i in range(boxes.shape[0]):
             if labels[i] == 0: # remove all other found classes
                 box = boxes[i,:]
                 an_boxes.append(box)
         
-        return np.asarray(an_boxes, dtype=np.int32)
+        return np.asarray(an_boxes, dtype=np.int32), confidence
 
 
 
@@ -76,7 +78,7 @@ def get_segmentor(device = None):
 
 
 
-def megadetector_wrapper(object):
+def megadescriptor_wrapper(object):
     def __init__(self, megadescriptor, device):
         self.megadescriptor = megadescriptor
         self.device = device
@@ -103,7 +105,7 @@ def get_extractor(device = None):
     megadescriptor = megadescriptor.eval()
     megadescriptor.to(device)
     
-    extractor = megadetector_wrapper(megadescriptor, device)
+    extractor = megadescriptor_wrapper(megadescriptor, device)
 
     return extractor
 
