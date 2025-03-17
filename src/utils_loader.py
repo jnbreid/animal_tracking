@@ -12,8 +12,9 @@ from PytorchWildlife.data import datasets as pw_data
 from PytorchWildlife import utils as pw_utils
 from PIL import Image
 from urllib.request import urlopen
+import wget
 
-from model import DistNet_t
+from src.model import DistNet_t
 
 
 class megadetector_wrapper(object):
@@ -69,10 +70,10 @@ def get_segmentor(device = None):
 
     # get model files
     HOME = os.getcwd()
-    print("HOME:", HOME)
-
-    os.system(f'mkdir - {HOME}/weights')
-    os.system(f'wget -q https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth -P {HOME}/weights')
+    if not os.path.exists(os.path.join(HOME, 'weights')):
+        os.mkdir(os.path.join(HOME, 'weights'))
+    if not os.path.isfile(os.path.join(HOME, 'weights', 'sam_vit_h_4b8939.pth')):
+        os.system(f'wget -q https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth -P {HOME}/weights')
     
     CHECKPOINT_PATH = os.path.join(HOME, "weights", "sam_vit_h_4b8939.pth")
     MODEL_TYPE = "vit_h"
@@ -84,7 +85,7 @@ def get_segmentor(device = None):
 
 
 
-def megadescriptor_wrapper(object):
+class megadescriptor_wrapper(object):
     def __init__(self, megadescriptor, device):
         self.megadescriptor = megadescriptor
         self.device = device

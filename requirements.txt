@@ -1,11 +1,11 @@
 torch
 torchvision
 torchaudio
+numpy
 tqdm
 Pillow
 supervision==0.23.0
 gradio
-ultralytics-yolov5
 chardet
 wget
 ultralytics
@@ -17,10 +17,11 @@ roboflow
 dataclasses-json 
 supervision
 filterpy==1.4.5
-scikit-image==0.17.2
+scikit-image
 pycocotools
 moviepy
+ultralytics-yolov5
 wildlife-datasets
 wildlife-tools
 PytorchWildlife
-'git+https://github.com/facebookresearch/segment-anything.git'
+git+https://github.com/facebookresearch/segment-anything.git

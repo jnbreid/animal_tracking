@@ -5,10 +5,11 @@ from pycocotools import mask
 import time
 import os
 
-from utils_loader import get_detector, get_segmentor, get_extractor, get_DistNet
-from utils import overlay, col_list, merge_masks_fast
-from track import Tracker
-from utils_data import write_mp4
+from src.utils_loader import get_detector, get_segmentor, get_extractor, get_DistNet
+from src.utils import overlay, col_list, merge_masks_fast
+from src.track import Tracker
+from src.utils_data import write_mp4
+
 
 
 def infer_video(img_seq, 
@@ -19,6 +20,7 @@ def infer_video(img_seq,
                 seg_file = True, 
                 save_dir = 'out_dir', 
                 distnet = None,
+                distnet_weights = None,
                 detector = None, 
                 extractor = None, 
                 segmentor = None, 
@@ -30,22 +32,32 @@ def infer_video(img_seq,
     start_time = time.time()
 
     print(f"Video processing started.")
-    os.mkdir(save_dir)
+    if not os.path.exists(save_dir):
+        os.mkdir(save_dir)
+    else:
+        print(f"Warning: {save_dir} already exists.")
     if visualize == True:
         image_dir = os.path.join(save_dir, 'images')
-        os.mkdir(image_dir)
+        if not os.path.exists(image_dir):
+            os.mkdir(image_dir)
+        else: 
+            print(f"Warning: {save_dir} already exists.")
 
     if device is None:
         device = 'cpu'
 
     if detector is None:
+        print(f"Loading detection model ...")
         detector = get_detector()
     if extractor is None:
+        print(f"Loading feature extraction model ...")
         extractor = get_extractor()
     if segmentor is None:
+        print(f"Loading segmentation model ...")
         segmentor = get_segmentor()
     if distnet is None:
-        distnet = get_DistNet()
+        print(f"Loading DistNet ...")
+        distnet = get_DistNet(weight_path = distnet)
     
 
     mot_tracker = Tracker(distnet, max_age = 15, min_hits = 3, iou_threshold = 0.1, dist_mode = dist_mode)

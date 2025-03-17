@@ -8,7 +8,7 @@ from math import isnan
 
 from sklearn.metrics.pairwise import cosine_similarity
 
-from utils import iou_mask
+from src.utils import iou_mask
 
 import gc
 

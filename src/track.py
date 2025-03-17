@@ -2,9 +2,7 @@ import numpy as np
 import time
 from filterpy.kalman import KalmanFilter
 
-
-
-from utils import linear_assignment, iou_batch, iou_mask, decision_matr, convert_bbox_to_z, convert_x_to_bbox, insert_mask, cutout_mask
+from src.utils import linear_assignment, iou_batch, iou_mask, decision_matr, convert_bbox_to_z, convert_x_to_bbox, insert_mask, cutout_mask
 
 
 class KalmanBoxTracker(object):
