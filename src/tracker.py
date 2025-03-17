@@ -60,14 +60,14 @@ def infer_video(img_seq,
         distnet = get_DistNet(weight_path = distnet)
     
 
-    mot_tracker = Tracker(distnet, max_age = 15, min_hits = 3, iou_threshold = 0.1, dist_mode = dist_mode)
+    mot_tracker = Tracker(distnet, device = device, max_age = 15, min_hits = 3, iou_threshold = 0.1, dist_mode = dist_mode)
     colors = col_list()
 
     full_tracks = []
     mots_string = ""
 
     for i in range(len(img_seq)):
-        if i % 10 == 0:
+        if i % 1 == 0:
             print(f"Frame {i+1} / {len(img_seq)}")
         
         current_image = img_seq[i]
@@ -143,7 +143,7 @@ def infer_video(img_seq,
 
             masks.append(pred_mask)
             save_detections.append([item[4], box[0], box[1], box[2]-box[0], box[3]-box[1]])
-            c_score = confidences[j]
+            c_score = current_confidences[j]
             full_tracks.append([i, item[4], box[0], box[1], box[2]-box[0], box[3]-box[1], c_score, -1, -1, -1])
 
             # calculate mask image for mota file
@@ -186,7 +186,7 @@ def infer_video(img_seq,
 
         # save generated annotated frames    
         if visualize == True:
-            img_name = f"str(i).zfill(6).jpg"
+            img_name = f"{str(i).zfill(6)}.jpg"
             img_path = os.path.join(image_dir, img_name)
             cv2.imwrite(img_path, bgr_img)
 

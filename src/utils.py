@@ -62,14 +62,23 @@ import torch
 function to calculate the decision matrix that incoporates information in the form of
 feature distance, mask_iou score and a time component
 """
-def decision_matr(model, bb_test, mask_test, bb_gt, mask_gt, feature_vect_test, feature_vect, n_last_seen, device, lambda_val = 0.6):
+def decision_matr(model, 
+                  bb_test, 
+                  mask_test, 
+                  bb_gt, 
+                  mask_gt, 
+                  feature_vect_test, 
+                  feature_vect, 
+                  n_last_seen, 
+                  device, 
+                  lambda_val = 0.6):
   iou_array = iou_mask(bb_test, mask_test, bb_gt, mask_gt)
   s_test = len(mask_test)
   s_gt = len(mask_gt)
   feature_dist = np.zeros((s_test, s_gt))
   for i in range(s_test):
     for j in range(s_gt):
-      n_seen = 0 #n_last_seen[j]
+      n_seen = n_last_seen[j]
       t_feature = np.asarray(feature_vect_test[i]).reshape((1,-1))
       gt_feature_vect = np.asarray(feature_vect[j]).reshape((1,-1))
       similarity = cosine_similarity(t_feature, gt_feature_vect)[0][0]
@@ -231,7 +240,7 @@ can return colors in RGB format
 """
 class col_list():
   def __init__(self):
-    hex_colors = ['#00FF00', '#0000FF', '#FF0000', '#01FFFE', '#FFA6FE', '#FFDB66',#'#000000',
+    hex_colors = ['#0000FF', '#FF0000', '#01FFFE', '#FFA6FE', '#FFDB66','#00FF00', #'#000000',
                   '#006401', '#010067', '#95003A', '#007DB5', '#FF00F6', '#FFEEE8', '#774D00', '#90FB92', '#0076FF', '#D5FF00', '#FF937E', '#6A826C', '#FF029D', '#FE8900', '#7A4782', '#7E2DD2', '#85A900', '#FF0056', '#A42400',
                   '#00AE7E','#683D3B', '#BDC6FF', '#263400', '#BDD393', '#00B917', '#9E008E', '#001544', '#C28C9F', '#FF74A3', '#01D0FF', '#004754', '#E56FFE', '#788231', '#0E4CA1', '#91D0CB', '#BE9970', '#968AE8', '#BB8800',
                   '#43002C', '#DEFF74', '#00FFC6', '#FFE502', '#620E00', '#008F9C', '#98FF52', '#7544B1', '#B500FF', '#00FF78', '#FF6E41', '#005F39', '#6B6882', '#5FAD4E', '#A75740', '#A5FFD2', '#FFB167', '#009BFF', '#E85EBE']

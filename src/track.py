@@ -98,7 +98,17 @@ class KalmanBoxTracker(object):
     return convert_x_to_bbox(self.kf.x), self.mask, self.feature_vect
 
 
-def associate_detections_to_trackers(model, detections, detect_masks ,trackers, pred_masks, feature_vect_detect, feature_vect, n_last_seen, iou_threshold = 0.3, dist_mode='default'):
+def associate_detections_to_trackers(model, 
+                                     detections, 
+                                     detect_masks,
+                                     trackers, 
+                                     pred_masks, 
+                                     feature_vect_detect, 
+                                     feature_vect, 
+                                     n_last_seen, 
+                                     device, 
+                                     iou_threshold = 0.3, 
+                                     dist_mode='default'):
   """
   Assigns detections to tracked object (both represented as bounding boxes)
   (this class is taken from https://github.com/abewley/sort/blob/master/sort.py and extended 
@@ -115,7 +125,15 @@ def associate_detections_to_trackers(model, detections, detect_masks ,trackers, 
   elif dist_mode == 'box':
     iou_matrix = iou_matrix = iou_batch(detections,  trackers)
   else:
-    iou_matrix = decision_matr(model, detections, detect_masks, trackers, pred_masks, feature_vect_detect, feature_vect, n_last_seen)
+    iou_matrix = decision_matr(model, 
+                               detections, 
+                               detect_masks, 
+                               trackers, 
+                               pred_masks, 
+                               feature_vect_detect, 
+                               feature_vect, 
+                               n_last_seen, 
+                               device)
  
   if min(iou_matrix.shape) > 0:
     a = (iou_matrix > iou_threshold).astype(np.int32)
@@ -153,7 +171,7 @@ def associate_detections_to_trackers(model, detections, detect_masks ,trackers, 
 
 
 class Tracker(object):
-  def __init__(self, model, max_age=5, min_hits=3, iou_threshold=0.3, dist_mode = 'default'):
+  def __init__(self, model, device=None, max_age=5, min_hits=3, iou_threshold=0.3, dist_mode = 'default'):
     
     self.model = model
     self.model.eval()
@@ -163,6 +181,10 @@ class Tracker(object):
     self.trackers = []
     self.frame_count = 0
     self.dist_mode = dist_mode
+    if device is None:
+      self.device = 'cpu'
+    else:
+      self.device = device
 
   def update(self, dets=np.empty((0, 5)), masks = False, feature_vect_detect = False):
     self.frame_count += 1
@@ -191,7 +213,7 @@ class Tracker(object):
     for t in reversed(to_del):
       self.trackers.pop(t)
 
-    matched, unmatched_dets, unmatched_trks = associate_detections_to_trackers(self.model, dets,masks,trks,pred_masks, feature_vect_detect, feature_vects,  n_last_seen, iou_threshold=self.iou_threshold, dist_mode = self.dist_mode)
+    matched, unmatched_dets, unmatched_trks = associate_detections_to_trackers(self.model, dets,masks,trks,pred_masks, feature_vect_detect, feature_vects,  n_last_seen, self.device, iou_threshold=self.iou_threshold, dist_mode = self.dist_mode)
     # update matched trackers with assigned detections
     for m in matched:
       self.trackers[m[1]].update(dets[m[0], :], masks[m[0]], feature_vect_detect[m[0]])

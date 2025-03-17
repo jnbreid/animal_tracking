@@ -77,7 +77,7 @@ def get_segmentor(device = None):
     
     CHECKPOINT_PATH = os.path.join(HOME, "weights", "sam_vit_h_4b8939.pth")
     MODEL_TYPE = "vit_h"
-
+    print(f"Initializing sam")
     sam = sam_model_registry[MODEL_TYPE](checkpoint=CHECKPOINT_PATH).to(device=device)
     mask_predictor = SamPredictor(sam)  
     return mask_predictor
