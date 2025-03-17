@@ -4,6 +4,7 @@ import cv2
 from pycocotools import mask
 import time
 import os
+from tqdm import tqdm
 
 from src.utils_loader import get_detector, get_segmentor, get_extractor, get_DistNet
 from src.utils import overlay, col_list, merge_masks_fast
@@ -66,9 +67,8 @@ def infer_video(img_seq,
     full_tracks = []
     mots_string = ""
 
-    for i in range(len(img_seq)):
-        if i % 1 == 0:
-            print(f"Frame {i+1} / {len(img_seq)}")
+    for i in tqdm(range(len(img_seq))):
+ 
         
         current_image = img_seq[i]
         full_mask = np.zeros((current_image.shape[:2]))
@@ -98,7 +98,7 @@ def infer_video(img_seq,
             c_masks.append(pred_mask)
 
             # calculate feature vector for each detected object
-            current_crop = current_image[c_box[0]:c_box[2], c_box[1]:c_box[3]].copy()
+            current_crop = current_image[c_box[1]:c_box[3], c_box[0]:c_box[2],:].copy()
             feature_vect = extractor(current_crop)
             feature_vect = feature_vect.detach().cpu().numpy().reshape(-1)
             c_feature_vects.append(feature_vect)
@@ -171,7 +171,7 @@ def infer_video(img_seq,
             mots_string = mots_string + f"{str(i)} {str(1000 + int(wanted_id))} {str(1)} {str(size[0])} {str(size[1])} {counts}\n"
 
             if visualize == True:
-                col = colors.get_color(k)
+                col = colors.get_color(int(wanted_id))
                 bgr_img = overlay(bgr_img, vis_mask, (int(col[2]),int(col[1]),int(col[0])), alpha = 0.5)
                 
 
@@ -181,8 +181,8 @@ def infer_video(img_seq,
                 ref_y0 = int(refined_indexes[1].min())
                 ref_y1 = int(refined_indexes[1].max())
                 box = np.asarray([ref_y0, ref_x0, ref_y1,  ref_x1])
-                cv2.rectangle(bgr_img, (box[0], box[1]), (box[2], box[3]), (int(col[2]),int(col[1]),int(col[0])), 4)
-                cv2.putText(bgr_img, '#'+track_label, (x0+5, y0-10), 0,0.6,(int(col[2]),int(col[1]),int(col[0])),thickness=4)
+                cv2.rectangle(bgr_img, (box[0], box[1]), (box[2], box[3]), (int(col[0]),int(col[1]),int(col[2])), 4)
+                cv2.putText(bgr_img, '#'+str(int(wanted_id)), (box[0]+5, box[1]-10), 0,0.6,(int(col[0]),int(col[1]),int(col[2])),thickness=4)
 
         # save generated annotated frames    
         if visualize == True:
