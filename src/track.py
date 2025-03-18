@@ -125,16 +125,10 @@ def associate_detections_to_trackers(model,
   elif dist_mode == 'box':
     iou_matrix = iou_matrix = iou_batch(detections,  trackers)
   else:
-    iou_matrix = decision_matr(model, 
-                               detections, 
-                               detect_masks, 
-                               trackers, 
-                               pred_masks, 
-                               feature_vect_detect, 
-                               feature_vect, 
-                               n_last_seen, 
-                               device)
- 
+    iou_matrix = decision_matr(model, detections, detect_masks, trackers, pred_masks, 
+                               feature_vect_detect, feature_vect, n_last_seen, device)
+
+
   if min(iou_matrix.shape) > 0:
     a = (iou_matrix > iou_threshold).astype(np.int32)
 

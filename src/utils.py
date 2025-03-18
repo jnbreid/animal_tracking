@@ -75,7 +75,7 @@ def decision_matr(model,
   iou_array = iou_mask(bb_test, mask_test, bb_gt, mask_gt)
   s_test = len(mask_test)
   s_gt = len(mask_gt)
-  combinded_dist = np.zeros((s_test, s_gt))
+  combined_dist = np.zeros((s_test, s_gt))
   for i in range(s_test):
     for j in range(s_gt):
       n_seen = n_last_seen[j]
@@ -88,11 +88,10 @@ def decision_matr(model,
       input_vect = input_vect.to(device)
       # calculate confidence value for one specific pair
       output = model(input_vect)
-      output = output.detach().cpu().numpy()[0,0]#[0]#
-
-      combinded_dist[i,j] = output
+      output = output.detach().cpu().numpy()[0,0]
+      combined_dist[i,j] = output
   # rescale and transform decision value
-  dec_matrix = -(combinded_dist-1)
+  dec_matrix = -(combined_dist-1)
   return dec_matrix
 
 

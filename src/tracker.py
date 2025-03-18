@@ -16,7 +16,8 @@ from src.utils_data import write_mp4
 def infer_video(img_seq, 
                 confidences_p = None,
                 bbox_p = None,
-                visualize = True, 
+                visualize = True,
+                box_vis = True, 
                 box_file = True, 
                 seg_file = True, 
                 save_dir = 'out_dir', 
@@ -58,8 +59,8 @@ def infer_video(img_seq,
         segmentor = get_segmentor()
     if distnet is None:
         print(f"Loading DistNet ...")
-        distnet = get_DistNet(weight_path = distnet)
-    
+        distnet = get_DistNet(weight_path = distnet_weights)
+
 
     mot_tracker = Tracker(distnet, device = device, max_age = 15, min_hits = 3, iou_threshold = 0.1, dist_mode = dist_mode)
     colors = col_list()
@@ -130,7 +131,7 @@ def infer_video(img_seq,
             pred_mask, _, _ = segmentor.predict(box=box, multimask_output=False)
             pred_mask = pred_mask[0,:,:].astype(np.int8)
             # refine box
-            if refine == True:
+            if refine == True and len(np.unique(pred_mask))>1:
                 refined_indexes = np.where(pred_mask == 1)
 
                 ref_x0 = int(refined_indexes[0].min())
@@ -174,15 +175,15 @@ def infer_video(img_seq,
                 col = colors.get_color(int(wanted_id))
                 bgr_img = overlay(bgr_img, vis_mask, (int(col[2]),int(col[1]),int(col[0])), alpha = 0.5)
                 
-
-                refined_indexes = np.where(vis_mask == 1)
-                ref_x0 = int(refined_indexes[0].min())
-                ref_x1 = int(refined_indexes[0].max())
-                ref_y0 = int(refined_indexes[1].min())
-                ref_y1 = int(refined_indexes[1].max())
-                box = np.asarray([ref_y0, ref_x0, ref_y1,  ref_x1])
-                cv2.rectangle(bgr_img, (box[0], box[1]), (box[2], box[3]), (int(col[0]),int(col[1]),int(col[2])), 4)
-                cv2.putText(bgr_img, '#'+str(int(wanted_id)), (box[0]+5, box[1]-10), 0,0.6,(int(col[0]),int(col[1]),int(col[2])),thickness=4)
+                if box_vis == True:
+                    box_indexes = np.where(vis_mask == 1)
+                    ref_x0 = int(box_indexes[0].min())
+                    ref_x1 = int(box_indexes[0].max())
+                    ref_y0 = int(box_indexes[1].min())
+                    ref_y1 = int(box_indexes[1].max())
+                    box = np.asarray([ref_y0, ref_x0, ref_y1,  ref_x1])
+                    cv2.rectangle(bgr_img, (box[0], box[1]), (box[2], box[3]), (int(col[0]),int(col[1]),int(col[2])), 4)
+                    cv2.putText(bgr_img, '#'+str(int(wanted_id)), (box[0]+5, box[1]-10), 0,0.6,(int(col[0]),int(col[1]),int(col[2])),thickness=4)
 
         # save generated annotated frames    
         if visualize == True:
