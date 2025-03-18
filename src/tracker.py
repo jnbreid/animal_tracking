@@ -50,16 +50,16 @@ def infer_video(img_seq,
 
     if detector is None:
         print(f"Loading detection model ...")
-        detector = get_detector()
+        detector = get_detector(device = device)
     if extractor is None:
         print(f"Loading feature extraction model ...")
-        extractor = get_extractor()
+        extractor = get_extractor(device = device)
     if segmentor is None:
         print(f"Loading segmentation model ...")
-        segmentor = get_segmentor()
+        segmentor = get_segmentor(device = device)
     if distnet is None:
         print(f"Loading DistNet ...")
-        distnet = get_DistNet(weight_path = distnet_weights)
+        distnet = get_DistNet(device = device, weight_path = distnet_weights)
 
 
     mot_tracker = Tracker(distnet, device = device, max_age = 15, min_hits = 3, iou_threshold = 0.1, dist_mode = dist_mode)
