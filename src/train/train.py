@@ -3,14 +3,28 @@ from datetime import datetime
 
 import torch
 
+"""
+function to train a DistNet object for one epoch
 
+Parameters:
+- epoch_index (int)
+- tb_writer (tensorboard writer object)
+- model (DistNet object)
+- loss_fkt (torch loss function)
+- train_loader (torch data loader)
+- test_loader (torch data loader)
+- device (torch device)
+- optimizer (torch optimizer)
+
+Returns:
+- loss (torch float)
+"""
 def train_one_epoch(epoch_index, tb_writer, model, loss_fkt, train_loader, test_loader, device, optimizer):
     running_loss = 0.
     last_loss = 0.
 
     for i, data in enumerate(train_loader):
-        #print(i)
-        # Every data instance is an input + label pair
+        # get input and label onto device
         inputs, labels = data
         inputs = inputs.to(device)
         labels = labels.to(device)
@@ -25,21 +39,33 @@ def train_one_epoch(epoch_index, tb_writer, model, loss_fkt, train_loader, test_
         loss = loss_fkt(outputs, labels)
         loss.backward()
 
-        # Adjust learning weights
+        # Adjust  weights
         optimizer.step()
 
-        # Gather data and report
+        # add data in writer
         running_loss += loss.item()
         if i % 10 == 9:
-            last_loss = running_loss / 10 # loss per batch
-            #print('  batch {} loss: {}'.format(i + 1, last_loss))
+            last_loss = running_loss / 10 
             tb_x = epoch_index * len(train_loader) + i + 1
-            tb_writer.add_scalar('Loss/train', last_loss, tb_x)
+            tb_writer.add_scalar('Trainingloss', last_loss, tb_x)
             running_loss = 0.
 
     return last_loss
 
+"""
+function to train a DistNet model for multiple epochs
 
+Parameters:
+- model (DistNet Object)
+- loss_fkt (torch loss function)
+- train_loader (torch data loader)
+- val_loader (torch data loader)
+- device (torch device)
+- n_epochs (int)
+
+Returns:
+-
+"""
 def train(model, loss_fkt, train_loader, val_loader, device, n_epochs = 1500):
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     writer = SummaryWriter('runs/nn_{}'.format(timestamp))
