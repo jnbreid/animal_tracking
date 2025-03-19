@@ -4,7 +4,10 @@
 This project provides a pipeline for tracking and segmenting animals in video footage. It leverages pretrained models and foundation models to facilitating the automatic analysis animal videos (especially camera trap videos).
 
 ## Example videos
-![Example 1](assets/vid1.gif)  ![Example 2](assets/vid2.gif)
+
+|Video 1| Video 2|
+
+|![Example 1](assets/vid1.gif) | ![Example 2](assets/vid2.gif) |
 
 The animals are annotated by applying the pipeline. The raw videos used as input for the pipeline can be found [here](demo_data). 
 
