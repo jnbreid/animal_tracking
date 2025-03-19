@@ -1,11 +1,14 @@
 # Animal Tracker
 
 ## Overview
-This project provides a pipeline for tracking and segmenting animals in video footage. It leverages pretrained models and foundation models to facilitating the automatic analysis animal videos (especially camera trap videos).
+This project provides a pipeline for tracking and segmenting animals in video footage. 
 
-## Example videos
+It uses pre-trained models and basic models to facilitate the automatic analysis of animal videos. This pipeline is specifically designed for tracking in camera trap videos.
+The pipeline requires minimal training and does not require data annotated with segmentation masks for training. This enables automated analysis of camera trap video in domains where little training data is available.
 
-|Video 1                       | Video 2                       |
+### Example videos
+
+|Example video 1               | Example video 2               |
 | ---------------------------- | ----------------------------- |
 |![Example 1](assets/vid1.gif) | ![Example 2](assets/vid2.gif) |
 
@@ -15,6 +18,16 @@ The videos are part of the [**GMOT-40 Benchmark**](https://github.com/Spritea/GM
 The video data is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 Further information about the data can be found  [here](licenses.md) under point 7.
 
+### Demo
+
+The notebook *demo_inference.ipynb* can be used to track animals in the example videos [here](demo_data).
+
+## Dependencies
+
+To install all required packages run
+"""
+pip install -r requirements.txt
+"""
 
 ## License
 
