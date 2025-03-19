@@ -17,6 +17,11 @@ import wget
 from src.model import DistNet_t
 
 
+"""
+Class to wrap the megadetector to facilitate usability
+
+megadetector can now be directly called
+"""
 class megadetector_wrapper(object):
   
     def __init__(self, megadetector):
@@ -47,7 +52,13 @@ class megadetector_wrapper(object):
 
 
 """
-function to load model and pretrained weights. here the megadetector is used
+function to load model and pretrained weights for the megadetector
+
+Parameters:
+- device (torch device)
+
+Returns:
+- megadetector_wrapper instance
 """
 def get_detector(device = None):
     if device is None:
@@ -60,9 +71,16 @@ def get_detector(device = None):
     return detector
     
 
+
 from segment_anything import sam_model_registry, SamAutomaticMaskGenerator, SamPredictor
 """
 function to load segmentation model
+
+Parameters:
+- device (torch device)
+
+Returns:
+- SAM instance
 """
 def get_segmentor(device = None):
     if device is None:
@@ -84,7 +102,9 @@ def get_segmentor(device = None):
 
 
 
-
+"""
+Class to wrap megadescriptor and needed transforms to facilitate usage 
+"""
 class megadescriptor_wrapper(object):
     def __init__(self, megadescriptor, device):
         self.megadescriptor = megadescriptor
@@ -101,6 +121,12 @@ class megadescriptor_wrapper(object):
 
 """
 function to load feature extractor model
+
+Parameters:
+- device (torch device)
+
+Returns:
+- megadescriptor wrapper instance
 """
 def get_extractor(device = None):
     if device is None:
@@ -116,8 +142,16 @@ def get_extractor(device = None):
 
     return extractor
 
+
 """
 function to load distnet model
+
+Parameters:
+- device (torch device)
+- weight_path (str)
+
+Returns:
+- DistNet_t object
 """
 def get_DistNet(device = None, weight_path = None):
     if device is None:

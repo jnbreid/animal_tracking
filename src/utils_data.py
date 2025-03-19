@@ -2,6 +2,15 @@
 import cv2
 import moviepy.video.io.ImageSequenceClip
 
+"""
+function to read a mp4 file and return a list of all frames in the video
+
+Parameters:
+- file_path (str)
+
+Returns:
+- list (containing f NxM numpy arrays)
+"""
 def read_mp4(file_path):
   frames = []
 
@@ -13,7 +22,16 @@ def read_mp4(file_path):
 
   return frames
 
+"""
+function to generate a mp4 file from image files 
 
+Parameters:
+- imgpaths_list (list containing x strings)
+- fps (int)
+
+Returns:
+- bool
+"""
 def write_mp4(file_path, imgpaths_list, fps = 16):
     clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(imgpaths_list, fps=fps)
     clip.write_videofile(file_path)
