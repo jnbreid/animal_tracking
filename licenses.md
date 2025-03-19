@@ -1,6 +1,7 @@
 # Third-Party Licenses
 
-This project includes code from third-party projects under the following licenses.
+This project includes code and data from third-party projects under the following licenses.
+
 
 ---
 
