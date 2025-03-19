@@ -3,7 +3,6 @@
 ## Overview
 This project provides a pipeline for tracking and segmenting animals in video footage. It leverages pretrained models and foundation models to facilitating the automatic analysis animal videos (especially camera trap videos).
 
-
 ## Example videos
 ![Example 1](assets/vid1.gif)  ![Example 2](assets/vid2.gif)
 
