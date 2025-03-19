@@ -369,7 +369,7 @@ The example and demo videos used in this project are from the [**GMOT-40 Benchma
                K. Zhang,
                H. Ling
 - **Source:** https://spritea.github.io/GMOT40/  
-- **License:** The data is licensed under a  [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/)  
+- **License:** The data is licensed under a  [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License](https://creativecommons.org/licenses/by-nc-sa/4.0/)  
 
 ### **Modifications Made**
 - Transformed frames into video
