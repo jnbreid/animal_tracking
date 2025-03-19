@@ -4,12 +4,12 @@ from filterpy.kalman import KalmanFilter
 
 from src.utils import linear_assignment, iou_batch, iou_mask, decision_matr, convert_bbox_to_z, convert_x_to_bbox, insert_mask, cutout_mask
 
-
+"""
+This class represents the internal state of individual tracked objects observed as bbox.
+(this class is taken from https://github.com/abewley/sort/blob/master/sort.py and extended to work with feature vectors and segmentation masks)
+"""
 class KalmanBoxTracker(object):
-  """
-  This class represents the internal state of individual tracked objects observed as bbox.
-  (this class is taken from https://github.com/abewley/sort/blob/master/sort.py and extended to work with feature vectors and segmentation masks)
-  """
+  
   count = 0
   def __init__(self,bbox, mask, feature_vect):
     """
@@ -98,6 +98,32 @@ class KalmanBoxTracker(object):
     return convert_x_to_bbox(self.kf.x), self.mask, self.feature_vect
 
 
+
+"""
+Assigns detections to tracked object (both represented as bounding boxes)
+(this class is taken from https://github.com/abewley/sort/blob/master/sort.py and extended 
+to work with feature vectors and segmentation masks as well as different modes for 
+distance calculation)
+Returns 3 lists of matches, unmatched_detections and unmatched_trackers
+
+Parameters:
+- model (DistNet object)
+- detections (nx4 numpy array)
+- detect_masks (NxM numpy array)
+- trackers (list of KalmanBoxTracker objects)
+- pred_masks (NxM numpy array)
+- feature_vect_detect (list of n 1x1535 numpy arrays)
+- feature_vect (list of m 1x1535 numpy arrays)
+- n_last_seen (list of m floats)
+- device (torch device)
+- iou_threshold (float in [0,1])
+- dist_mode (str)
+
+Returns
+- numpy array of matched elements
+- numpy array of unmatched detections
+- numpy array of unmatched trackers
+"""
 def associate_detections_to_trackers(model, 
                                      detections, 
                                      detect_masks,
@@ -109,14 +135,7 @@ def associate_detections_to_trackers(model,
                                      device, 
                                      iou_threshold = 0.3, 
                                      dist_mode='default'):
-  """
-  Assigns detections to tracked object (both represented as bounding boxes)
-  (this class is taken from https://github.com/abewley/sort/blob/master/sort.py and extended 
-  to work with feature vectors and segmentation masks as well as different modes for 
-  distance calculation)
 
-  Returns 3 lists of matches, unmatched_detections and unmatched_trackers
-  """
   if(len(trackers)==0):
     return np.empty((0,2),dtype=int), np.arange(len(detections)), np.empty((0,5),dtype=int)
 
@@ -164,6 +183,10 @@ def associate_detections_to_trackers(model,
   return matches, np.array(unmatched_detections), np.array(unmatched_trackers)
 
 
+"""
+Tracker comprising a tracker for one video with (possibly) multiple instances
+(this class is taken from https://github.com/abewley/sort/blob/master/sort.py and extended to work with feature vectors and segmentation masks)
+"""
 class Tracker(object):
   def __init__(self, model, device=None, max_age=5, min_hits=3, iou_threshold=0.3, dist_mode = 'default'):
     
