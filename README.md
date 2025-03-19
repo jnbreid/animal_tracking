@@ -7,11 +7,11 @@ This project provides a pipeline for tracking and segmenting animals in video fo
 ## Example videos
 ![Example 1](assets/vid1.gif)  ![Example 2](assets/vid2.gif)
 
-The animals are annotated by applying the pipeline. 
+The animals are annotated by applying the pipeline. The raw videos used as input for the pipeline can be found [here](demo_data). 
 
-The videos are part of the [**GMOT-40 Benchmark**](https://github.com/Spritea/GMOT40)
-The video data is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/)
-For further information regarding the data can be found  [here](licenses.md) under point 7.
+The videos are part of the [**GMOT-40 Benchmark**](https://github.com/Spritea/GMOT40).
+The video data is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+Further information about the data can be found  [here](licenses.md) under point 7.
 
 
 ## License
