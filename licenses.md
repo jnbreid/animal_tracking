@@ -356,3 +356,38 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ~~~
+
+## **7. Dataset License**
+The example and demo videos used in this project are from the [**GMOT-40 Benchmark**](https://github.com/Spritea/GMOT40).
+
+- **Dataset:** GMOT-40 Benchmark
+- **Creators:** H. Bai
+               W. Cheng
+               P. Chu,
+               J. Liu,
+               K. Zhang,
+               H. Ling
+- **Source:** https://spritea.github.io/GMOT40/  
+- **License:** The data is licensed under a  [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/)  
+
+### **Modifications Made**
+- Transformed frames into video
+- Reduced the frame rate  
+- Shortened video length  
+- added bounding boxes, segmentation masks and tracking ids obtained with the pipeline presented in this Project. The bounding boxes and tracking ids are **not** taken from the GMOT-40 Benchmark
+
+Any modifications or reuse must also comply with the **CC BY-NC-SA 4.0** license terms.  
+
+### **Citation**
+If you use this dataset, please cite it as follows:
+
+```bibtex
+@misc{bai2021gmot40benchmarkgenericmultiple,
+      title={GMOT-40: A Benchmark for Generic Multiple Object Tracking}, 
+      author={Hexin Bai and Wensheng Cheng and Peng Chu and Juehuan Liu and Kai Zhang and Haibin Ling},
+      year={2021},
+      eprint={2011.11858},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2011.11858}, 
+}
