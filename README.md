@@ -15,7 +15,7 @@ facilitating the analysis of expecially camera trap videos.
 
 Example videos obtained by applying the tracking pipeline to the videos:
 
-![Example 1](assets/vid1.gif)  ![Example 2](assets/vid2.gif)
+![Example 1](assets/vid1.gif){: style="height:83px"}  ![Example 2](assets/vid2.gif){: style="height:83px"}
 
 
 
