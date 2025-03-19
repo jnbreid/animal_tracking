@@ -2,6 +2,17 @@
 import torch
 from torch import nn
 
+"""
+Model class for DistNet. All model architecture have identical input and output sizes, but differe in their complexity.
+
+Model input:
+- torch vector of size [3]
+
+Model output:
+- torch vector of size [1]
+"""
+
+
 class DistNet_t(nn.Module):
   def __init__(self):
     super().__init__()
