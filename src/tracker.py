@@ -12,7 +12,31 @@ from src.track import Tracker
 from src.utils_data import write_mp4
 
 
+"""
+function to start inference on a video. annotation files, and a annotated video can be generated
 
+Parameters:
+- img_seq (list of x NxMxC numpy arrays)
+- confidences_p (list of x numpy arrays of size y)
+- bbox_p (list of x bounding box arrays)
+- visualize (bool) [generate a video]
+- box_vis (bool) [vidualize bounding boxes in video]
+- box_file (bool) [generate mot file]
+- seg_file (bool) [generate mots file]
+- save_dir (str)
+- distnet (DistNet object)
+- distnet_weights (str)
+- detector (object that can be called as detector) (see utils_loader.py for further information)
+- extractor (object that can be called as extractor) (see utils_loader.py for further information)
+- segmentor (SAM object)
+- device (torch device)
+- refine (bool)
+- dist_mode (str)
+- fps (int)
+
+Returns:
+-
+"""
 def infer_video(img_seq, 
                 confidences_p = None,
                 bbox_p = None,
