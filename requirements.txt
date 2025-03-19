@@ -20,6 +20,7 @@ filterpy==1.4.5
 scikit-image
 pycocotools
 moviepy
+tensorflow
 ultralytics-yolov5
 wildlife-datasets
 wildlife-tools
