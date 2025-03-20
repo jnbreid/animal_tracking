@@ -232,13 +232,13 @@ def infer_video(img_seq,
     if box_file == True:
         print(f"Saving segmentation masks in mots txt file.")
         pred_array = np.asarray(full_tracks)
-        pred_path = os.path.join(save_dir, box_path, box_file_name) 
+        pred_path = os.path.join(box_path, box_file_name) 
         np.savetxt(pred_path, pred_array, delimiter=',')
 
     #save mots annotation file
     if seg_file == True:
         print(f"Saving segmentation masks in mots txt file.")
-        mots_save_path = os.path.join(save_dir, seg_path, seg_file_name)
+        mots_save_path = os.path.join(seg_path, seg_file_name)
         with open(mots_save_path, "w") as text_file:
             text_file.write(mots_string)
 
