@@ -22,7 +22,9 @@ Parameters:
 - visualize (bool) [generate a video]
 - box_vis (bool) [vidualize bounding boxes in video]
 - box_file (bool) [generate mot file]
+- box_file_name (str)
 - seg_file (bool) [generate mots file]
+- seg_file_name (str)
 - save_dir (str)
 - distnet (DistNet object)
 - distnet_weights (str)
@@ -43,7 +45,9 @@ def infer_video(img_seq,
                 visualize = True,
                 box_vis = True, 
                 box_file = True, 
+                box_file_name = "mot16.txt",
                 seg_file = True, 
+                seg_file_name = "mots.txt",
                 save_dir = 'out_dir', 
                 distnet = None,
                 distnet_weights = None,
@@ -68,6 +72,15 @@ def infer_video(img_seq,
             os.mkdir(image_dir)
         else: 
             print(f"Warning: {save_dir} already exists.")
+    
+    if box_file:
+        box_path = os.path.join(save_dir, 'mot16')
+        if not os.path.exists(box_path):
+            os.mkdir(box_path)
+    if seg_file:
+        seg_path = os.path.join(save_dir, 'mots')
+        if not os.path.exists(seg_path):
+            os.mkdir(seg_path)
 
     if device is None:
         device = 'cpu'
@@ -215,22 +228,17 @@ def infer_video(img_seq,
             img_path = os.path.join(image_dir, img_name)
             cv2.imwrite(img_path, bgr_img)
 
-                
-
-
-
-
     #save mot16 style annotation file
     if box_file == True:
         print(f"Saving segmentation masks in mots txt file.")
         pred_array = np.asarray(full_tracks)
-        pred_path = os.path.join(save_dir, f"mot16.txt") 
+        pred_path = os.path.join(save_dir, box_path, box_file_name) 
         np.savetxt(pred_path, pred_array, delimiter=',')
 
     #save mots annotation file
     if seg_file == True:
         print(f"Saving segmentation masks in mots txt file.")
-        mots_save_path = os.path.join(save_dir, f"mots.txt")
+        mots_save_path = os.path.join(save_dir, seg_path, seg_file_name)
         with open(mots_save_path, "w") as text_file:
             text_file.write(mots_string)
 
