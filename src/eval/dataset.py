@@ -171,4 +171,4 @@ class Wildbrueck(Dataset):
 
         full_scores.append(np.ones(bbox.shape[0]))
 
-    return img_paths, full_scores, full_boxes, c_id 
+    return img_paths, full_scores, full_boxes, full_masks
