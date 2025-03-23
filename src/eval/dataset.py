@@ -131,7 +131,6 @@ class Wildbrueck(Dataset):
     full_ids = []
     full_boxes = []
     full_masks = []
-    full_scores = []
 
     for item in elements:
         dframe_img = self.dframe.iloc[item]
@@ -168,6 +167,4 @@ class Wildbrueck(Dataset):
         full_ids.append(ids)
         img_paths.append(c_img_path)
 
-        full_scores.append(np.ones(bbox.shape[0]))
-
-    return img_paths, full_scores, full_boxes, full_masks
+    return img_paths, full_boxes, full_masks
