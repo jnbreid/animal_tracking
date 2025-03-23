@@ -13,10 +13,9 @@ Dataset class for evaluation of the wildlife crossing dataset
 
 """
 class Wildbrueck(Dataset):
-  def __init__(self, dataset_path, cross_val_fold = None, megadetections = False, train=False):
+  def __init__(self, dataset_path, cross_val_fold = None, train=False):
     self.dset_path = dataset_path
 
-    self.megadetections = megadetections
     self.annot_path = os.path.join(self.dset_path, 'animals_tracking.csv')
     self.image_size = None
 
