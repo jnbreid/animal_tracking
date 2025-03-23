@@ -20,14 +20,14 @@ Further information about the data can be found  [here](licenses.md) under point
 
 ### Demo
 
-The notebook *demo_inference.ipynb* can be used to track animals in the example videos [here](demo_data).
+The notebook [*demo_inference.ipynb*](demo_inference.ipynb) can be used to track animals in two [example videos](demo_data).
 
 ## Dependencies
 
 To install all required packages run
-"""
+~~~text 
 pip install -r requirements.txt
-"""
+~~~
 
 ## License
 
