@@ -57,7 +57,8 @@ def infer_video(img_seq,
                 device = None, 
                 refine = True, 
                 dist_mode = 'default',
-                fps = 12):
+                fps = 12,
+                suppress_warnings = False,):
     
     start_time = time.time()
 
@@ -65,13 +66,15 @@ def infer_video(img_seq,
     if not os.path.exists(save_dir):
         os.mkdir(save_dir)
     else:
-        print(f"Warning: {save_dir} already exists.")
+        if suppress_warnings == False:
+            print(f"Warning: {save_dir} already exists.")
     if visualize == True:
         image_dir = os.path.join(save_dir, 'images')
         if not os.path.exists(image_dir):
             os.mkdir(image_dir)
         else: 
-            print(f"Warning: {save_dir} already exists.")
+            if suppress_warnings == False:
+                print(f"Warning: {save_dir} already exists.")
     
     if box_file:
         box_path = os.path.join(save_dir, 'mot16')
