@@ -49,4 +49,5 @@ def gen_prediction_files(eval_dataset,
                 segmentor = segmentor,
                 device = device,
                 refine = True,
-                dist_mode = dist_mode)
+                dist_mode = dist_mode,
+                suppress_warnings = True,)
