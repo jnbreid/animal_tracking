@@ -1,1 +1,1 @@
-**TODO:** upload notebooks for training and evaluation
+**TODO:** upload working training notebook
