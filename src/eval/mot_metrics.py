@@ -70,7 +70,7 @@ def motMetricsEnhancedCalculator(gtSource, tSource):
 import os
 import numpy
 
-def eval_set(prediction_path, org_anns_path):
+def eval_set(org_anns_path, prediction_path):
     pred_files = os.listdir(prediction_path)
 
     metrics_results = []
