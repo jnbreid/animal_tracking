@@ -4,3 +4,6 @@ sam_vit_h_4b8939.pth
 __pycache__
 .ipynb_checkpoints
 mots_tools
+mots_common
+mots_eval
+mots_vis
