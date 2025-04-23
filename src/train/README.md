@@ -1,4 +1,3 @@
-
 The pipeline was trained and tested on a private video dataset that was first used in [this paper](https://doi.org/10.1016/j.ecoinf.2021.101215).
 
 
