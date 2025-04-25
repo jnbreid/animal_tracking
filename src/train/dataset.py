@@ -8,15 +8,33 @@ import numpa as np
 from torch.utils.data import Dataset
 from sklearn.metrics.pairwise import cosine_similarity
 
-"""
-Dataset class used to train a DistNet instance on the wildlife crossing dataset (private dataset)
-
-The dataset simulates the tracking with a Kalman filter for all tracklets with ground truth bounding boxes.
-Feature vectors and segmentation masks are precomputed.
-There exists a predicted and tracked bounding box, segmentation mask and feature vector for each tracked instance for all frames (except the first frame)
-These objects are then used to generate input vectors of size 3 for DistNet
-"""
 class Wildbrueck_Sim(Dataset):
+  """
+    Dataset class for training DistNet on the Wildbrueck (wildlife crossing) dataset.
+
+    This dataset simulates object tracking with a Kalman filter for annotated tracklets.
+    For each frame (excluding the first), it includes:
+        - predicted and ground truth bounding boxes,
+        - segmentation masks,
+        - feature vectors,
+        - time since last seen for tracked instances.
+
+    Each data point consists of a feature vector with 3 values:
+        - Cosine similarity between predicted and ground truth feature vectors.
+        - IoU between predicted and ground truth segmentation masks.
+        - Normalized frame distance since the object was last seen.
+
+    Positive (same instance) and negative (different instance) samples are generated
+    for each frame.
+
+    Args:
+        dataset_path (str): Root directory containing the dataset folders `predictions/` and `wildbrück_masks/`.
+        cross_val_fold (int, optional): Fold number to use for cross-validation. If None, all data is used.
+        train (bool): If using cross-validation, specifies whether to use the train or test split.
+
+    Attributes:
+        elements (list): A list of (input_tensor, label) pairs for training.
+  """
   def __init__(self, dataset_path, cross_val_fold = None, train = True):
     self.dset_path = dataset_path
 
