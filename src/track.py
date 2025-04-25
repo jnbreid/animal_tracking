@@ -240,11 +240,23 @@ def associate_detections_to_trackers(model,
   return matches, np.array(unmatched_detections), np.array(unmatched_trackers)
 
 
-"""
-Tracker comprising a tracker for one video with (possibly) multiple instances
-(this class is taken from https://github.com/abewley/sort/blob/master/sort.py and extended to work with feature vectors and segmentation masks)
-"""
 class Tracker(object):
+  """
+    Tracker for managing multiple tracked objects across video frames.
+    This class extends the original tracker from https://github.com/abewley/sort/blob/master/sort.py to support
+    feature vectors, segmentation masks, and different modes for distance calculation.
+
+    Attributes:
+        model (DistNet): The model used for distance predictions.
+        max_age (int): The maximum number of frames a tracker can remain unmatched before being deleted.
+        min_hits (int): The minimum number of hits (frames with a match) required to consider a tracker valid.
+        iou_threshold (float): The threshold for the predictted distance to match detections with trackers.
+        trackers (list): A list of KalmanBoxTracker objects that represent the active trackers.
+        frame_count (int): The current frame number.
+        dist_mode (str): The method used for distance calculation. It can be 'mask', 'box', or 'default'.
+        device (str): The device (CPU or GPU) used for computation.
+    """
+
   def __init__(self, model, device=None, max_age=5, min_hits=3, iou_threshold=0.3, dist_mode = 'default'):
     
     self.model = model
@@ -261,6 +273,24 @@ class Tracker(object):
       self.device = device
 
   def update(self, dets=np.empty((0, 5)), masks = False, feature_vect_detect = False):
+    """
+        Updates the tracker with new detections and feature vectors. Performs the following steps:
+        1. Predicts the current positions of the tracked objects.
+        2. Associates detections with trackers based on the distance calculation.
+        3. Updates the trackers with matched detections.
+        4. Creates new trackers for unmatched detections.
+        5. Removes dead trackers that have not been updated for too long.
+
+        Args:
+            dets (np.ndarray, optional): A numpy array of shape (n, 5) representing the bounding boxes and IDs of the detections. 
+                                         Each row is [x, y, width, height, ID]. Defaults to an empty array. If there are no detections use an empty array as input
+            masks (list of np.ndarray, optional): A list of n numpy array of shape (N, M) representing the segmentation masks for the detections. Defaults to False.
+            feature_vect_detect (list of np.ndarray, optional): A list of n 1x1535 numpy arrays representing the feature vectors of the detections. Defaults to False.
+
+        Returns:
+            np.ndarray: A numpy array of shape (m, 5) where each row is [x, y, width, height, ID] for the tracked objects.
+                        If no detections are matched or tracked, an empty array is returned.
+    """
     self.frame_count += 1
     # get predicted locations from existing trackers.
     trks = np.zeros((len(self.trackers), 5))
