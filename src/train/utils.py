@@ -8,11 +8,17 @@ from PIL import Image
 from skimage.draw import polygon, polygon2mask
 
 
-"""
-This class is used as a helper dataset class to load ground truth data from the wildlife crossing dataset to use
-as input for a kalman tracker.
-"""
+
 class Precompute_helper(Dataset):
+  """
+  This class is used as a helper dataset class to load ground truth data from the wildlife crossing dataset to use
+  as input for a kalman tracker.
+
+  Attributes:
+        dataset_path (str): Path to the dataset folder.
+        dset_split (int): If non-zero, loads dataset split information from Excel file.
+  """
+
   def __init__(self, dataset_path, dset_split = 0):
     self.dset_path = dataset_path
 
@@ -144,6 +150,16 @@ class Precompute_helper(Dataset):
   
 
 def precompute_gt_box(d_set, save_path, mask_predictor, extractor):
+  """
+  Computes and saves the ground truth bounding boxes, segmentation masks, and feature vectors from the dataset for later use.
+  Here the Megadescriptor and SAM are used
+
+  Args:
+      d_set (Precompute_helper): Dataset object.
+      save_path (str): Directory to save the output .npy files.
+      mask_predictor: Segmentation model capable of mask prediction given a box.
+      extractor: Feature extractor model to compute embedding vectors from image crops.
+  """
   for e in range(d_set.__len__()):
     elem = e
     print(f"{elem+1}/{d_set.__len__()}")
@@ -196,6 +212,14 @@ sys.path.insert(0, '..')
 from track import KalmanBoxTracker
 
 def precompute_pred_box(dataset_path, pre_path, pred_save_path):
+  """
+  Performs object tracking using Kalman filters and saves predicted states.
+
+  Args:
+      dataset_path (str): Path to dataset containing images and annotations.
+      pre_path (str): Path to directory containing precomputed ground truth masks and features.
+      pred_save_path (str): Path where predicted masks, features, and boxes will be saved.
+  """
 
   s_dset_path = dataset_path
   s_pre_path = pre_path
