@@ -10,7 +10,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 class Wildbrueck_Sim(Dataset):
   """
-    Dataset class for training DistNet on the Wildbrueck (wildlife crossing) dataset.
+    Dataset class for training DistNet on the (wildlife crossing) dataset.
+    Further information on the dataset can be found in the readme file.
 
     This dataset simulates object tracking with a Kalman filter for annotated tracklets.
     For each frame (excluding the first), it includes:

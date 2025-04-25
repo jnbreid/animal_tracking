@@ -1,25 +1,26 @@
-from torch.utils.tensorboard import SummaryWriter
 from datetime import datetime
 
 import torch
 
-"""
-function to train a DistNet object for one epoch
+def train_one_epoch(epoch_index, model, loss_fkt, train_loader, test_loader, device, optimizer, tb_writer = None):
+    """
+    Trains a DistNet model for a single epoch.
 
-Parameters:
-- epoch_index (int)
-- tb_writer (tensorboard writer object)
-- model (DistNet object)
-- loss_fkt (torch loss function)
-- train_loader (torch data loader)
-- test_loader (torch data loader)
-- device (torch device)
-- optimizer (torch optimizer)
+    Iterates over the training data, performs forward and backward passes, and updates model weights.
 
-Returns:
-- loss (torch float)
-"""
-def train_one_epoch(epoch_index, tb_writer, model, loss_fkt, train_loader, test_loader, device, optimizer):
+    Args:
+        epoch_index (int): Current epoch number.
+        tb_writer (SummaryWriter): TensorBoard writer object for logging. (install tensorflow to be able to use tensoboard)
+        model (torch.nn.Module): The DistNet model being trained.
+        loss_fkt (torch.nn.Module): Loss function used to compute loss.
+        train_loader (torch.utils.data.DataLoader): DataLoader for the training dataset.
+        test_loader (torch.utils.data.DataLoader): DataLoader for the validation dataset (unused here).
+        device (torch.device): The device to run the training on.
+        optimizer (torch.optim.Optimizer): Optimizer for updating model weights.
+
+    Returns:
+        float: The last computed loss value (averaged over the most recent 10 batches).
+    """
     running_loss = 0.
     last_loss = 0.
 
@@ -47,28 +48,34 @@ def train_one_epoch(epoch_index, tb_writer, model, loss_fkt, train_loader, test_
         if i % 10 == 9:
             last_loss = running_loss / 10 
             tb_x = epoch_index * len(train_loader) + i + 1
-            tb_writer.add_scalar('Trainingloss', last_loss, tb_x)
+            if tb_writer is not None:
+                tb_writer.add_scalar('Trainingloss', last_loss, tb_x)
             running_loss = 0.
 
     return last_loss
 
-"""
-function to train a DistNet model for multiple epochs
+#from torch.utils.tensorboard import SummaryWriter
 
-Parameters:
-- model (DistNet Object)
-- loss_fkt (torch loss function)
-- train_loader (torch data loader)
-- val_loader (torch data loader)
-- device (torch device)
-- n_epochs (int)
-
-Returns:
--
-"""
 def train(model, loss_fkt, train_loader, val_loader, device, n_epochs = 1500):
+    """
+    Trains a DistNet model over multiple epochs.
+
+    Performs training and validation loops, saves the model at each epoch, and logs both training
+    and validation losses. Uses `train_one_epoch` for training per epoch.
+
+    Args:
+        model (torch.nn.Module): The DistNet model to be trained.
+        loss_fkt (torch.nn.Module): The loss function used to optimize the model.
+        train_loader (torch.utils.data.DataLoader): DataLoader for training data.
+        val_loader (torch.utils.data.DataLoader): DataLoader for validation data.
+        device (torch.device): The device to run the training on.
+        n_epochs (int, optional): Number of training epochs. Defaults to 1500.
+
+    Returns:
+        None
+    """
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    writer = SummaryWriter('runs/nn_{}'.format(timestamp))
+    writer = None #SummaryWriter('runs/nn_{}'.format(timestamp)) #(install tensorboard to use)
     epoch_number = 0
 
     EPOCHS = n_epochs
@@ -83,7 +90,7 @@ def train(model, loss_fkt, train_loader, val_loader, device, n_epochs = 1500):
 
         # Make sure gradient tracking is on, and do a pass over the data
         model.train(True)
-        avg_loss = train_one_epoch(epoch_number, writer, model, loss_fkt, train_loader, val_loader, device)
+        avg_loss = train_one_epoch(epoch_number, model, loss_fkt, train_loader, val_loader, device, tb_writer = writer)
 
         #print(avg_loss)
 
