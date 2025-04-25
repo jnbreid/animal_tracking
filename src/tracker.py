@@ -60,6 +60,38 @@ def infer_video(img_seq,
                 fps = 12,
                 suppress_warnings = False,):
     
+    """
+    Function to perform inference on a video sequence. It generates annotation files (MOT format for tracking and segmentation) and an annotated video.
+    
+    This function takes a sequence of images, processes each frame to detect and track objects, and optionally visualizes the results, 
+    saving the annotated frames and videos, as well as tracking and segmentation annotations.
+
+    Args:
+        img_seq (list of ndarray): List of x (N,M,C) numpy arrays representing the image frames of the video sequence.
+        confidences_p (list of ndarray, optional): List of x pre computed numpy arrays of size y, where each array represents the confidence values for detected objects.
+        bbox_p (list of ndarray, optional): List of x pre computed bounding box arrays, where each array contains bounding boxes for objects in the corresponding frame.
+        visualize (bool, optional): If True, generates and saves an annotated video. Default is True.
+        box_vis (bool, optional): If True, visualizes bounding boxes in the annotated video. Default is True.
+        box_file (bool, optional): If True, generates and saves a MOT-style annotation file with bounding boxes. Default is True.
+        box_file_name (str, optional): Name of the bounding box annotation file. Default is "mot16.txt".
+        seg_file (bool, optional): If True, generates and saves a MOT-style annotation file with segmentation masks. Default is True.
+        seg_file_name (str, optional): Name of the segmentation annotation file. Default is "mots.txt".
+        save_dir (str, optional): Directory to save the output (images, annotations, and videos). Default is 'out_dir'.
+        distnet (DistNet, optional): Pretrained DistNet model for feature vector extraction. Default is None (Default Model is loaded).
+        distnet_weights (str, optional): Path to the DistNet model weights file. Default is None (Default pre trained Model weights are loaded).
+        detector (callable, optional): Object detector function that takes an image as input and returns bounding boxes and confidence scores. Default is None.
+        extractor (callable, optional): Feature extractor function that extracts feature vectors for detected objects. Default is None.
+        segmentor (SAM, optional): Segmentation model used to generate segmentation masks for the objects in the image. Default is None.
+        device (str, optional): Device to run the inference on ('cpu' or 'cuda'). Default is None, which uses 'cpu'.
+        refine (bool, optional): If True, refines bounding boxes based on segmentation mask. Default is True.
+        dist_mode (str, optional): The mode for distance calculation ('default', 'mask', 'box'). Default is 'default'.
+        fps (int, optional): Frames per second for the generated video. Default is 12.
+        suppress_warnings (bool, optional): If True, suppresses warnings about existing directories. Default is False.
+
+    Returns:
+        None: This function saves the results (video, annotation files) in the specified directory.
+    """
+    
     start_time = time.time()
 
     print(f"Video processing started.")
