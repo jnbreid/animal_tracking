@@ -4,11 +4,12 @@ from filterpy.kalman import KalmanFilter
 
 from src.utils import linear_assignment, iou_batch, iou_mask, decision_matr, convert_bbox_to_z, convert_x_to_bbox, insert_mask, cutout_mask
 
-"""
-This class represents the internal state of individual tracked objects observed as bbox.
-(this class is taken from https://github.com/abewley/sort/blob/master/sort.py and extended to work with feature vectors and segmentation masks)
-"""
 class KalmanBoxTracker(object):
+  """
+  This class represents the internal state of individual tracked objects observed as bounding boxes.
+  It extends the original tracker from https://github.com/abewley/sort/blob/master/sort.py to support 
+  feature vectors and segmentation masks, in addition to the bounding box information.
+  """
   
   count = 0
   def __init__(self,bbox, mask, feature_vect):
@@ -41,6 +42,16 @@ class KalmanBoxTracker(object):
 
 
   def update_mask(self, old_box, new_box):
+    """
+        Updates the segmentation mask based on the change in bounding box.
+
+        Args:
+            old_box (list or np.array): The previous bounding box.
+            new_box (list or np.array): The new bounding box.
+
+        Returns:
+            None: The mask is updated in place.
+    """
     c_mask = self.mask
     cut_mask = cutout_mask(c_mask, old_box[0])
     new_mask = np.zeros(c_mask.shape)
@@ -48,13 +59,31 @@ class KalmanBoxTracker(object):
     self.mask = new_mask
 
   def update_feature_vect(self, new_feature_vect, alpha_val = 0.6):
+    """
+        Updates the feature vector using an exponential moving average.
+
+        Args:
+            new_feature_vect (np.array): The new feature vector to be incorporated.
+            alpha_val (float, optional): The smoothing factor (default is 0.6). Controls how much of the old feature vector is retained.
+
+        Returns:
+            None: The feature vector is updated in place.
+    """
     exp_dec = alpha_val*self.feature_vect + (1-alpha_val)*new_feature_vect
     self.feature_vect = exp_dec
 
 
   def update(self,bbox, mask, feature_vect):
     """
-    Updates the state vector with observed bbox.
+        Updates the tracker state with a new bounding box, mask, and feature vector.
+
+        Args:
+            bbox (list or np.array): The new bounding box.
+            mask (np.array): The new segmentation mask for the detected and assigned object.
+            feature_vect (np.array): The new feature vector for the detected and assigned object.
+
+        Returns:
+            None: The state, mask, and feature vector are updated in place.
     """
     self.mask = mask
 
@@ -70,7 +99,15 @@ class KalmanBoxTracker(object):
 
   def predict(self):
     """
-    Advances the state vector and returns the predicted bounding box estimate.
+        Advances the state vector and returns the predicted bounding box and mask estimate.
+
+        Args:
+            None: No input arguments.
+
+        Returns:
+            tuple: 
+                - The predicted bounding box [x, y, width, height] as a list.
+                - The updated segmentation mask.
     """
     old_box = self.get_state()
 
@@ -90,40 +127,32 @@ class KalmanBoxTracker(object):
 
   def get_state(self):
     """
-    Returns the current bounding box estimate.
+        Returns the current bounding box estimate from the Kalman filter state.
+
+        Args:
+            None: This method does not require any arguments.
+
+        Returns:
+            np.array: The current bounding box estimate in the form [x, y, width, height].
     """
     return convert_x_to_bbox(self.kf.x)
 
   def get_full_state(self):
+    """
+        Returns the full state of the tracked object, including the bounding box, segmentation mask, and feature vector.
+
+        Args:
+            None: This method does not require any arguments.
+
+        Returns:
+            tuple: A tuple containing:
+                - np.array: The bounding box estimate [x, y, width, height].
+                - np.array: The segmentation mask of the object.
+                - np.array: The feature vector of the object.
+    """
     return convert_x_to_bbox(self.kf.x), self.mask, self.feature_vect
 
 
-
-"""
-Assigns detections to tracked object (both represented as bounding boxes)
-(this class is taken from https://github.com/abewley/sort/blob/master/sort.py and extended 
-to work with feature vectors and segmentation masks as well as different modes for 
-distance calculation)
-Returns 3 lists of matches, unmatched_detections and unmatched_trackers
-
-Parameters:
-- model (DistNet object)
-- detections (nx4 numpy array)
-- detect_masks (NxM numpy array)
-- trackers (list of KalmanBoxTracker objects)
-- pred_masks (NxM numpy array)
-- feature_vect_detect (list of n 1x1535 numpy arrays)
-- feature_vect (list of m 1x1535 numpy arrays)
-- n_last_seen (list of m floats)
-- device (torch device)
-- iou_threshold (float in [0,1])
-- dist_mode (str)
-
-Returns
-- numpy array of matched elements
-- numpy array of unmatched detections
-- numpy array of unmatched trackers
-"""
 def associate_detections_to_trackers(model, 
                                      detections, 
                                      detect_masks,
@@ -135,6 +164,34 @@ def associate_detections_to_trackers(model,
                                      device, 
                                      iou_threshold = 0.3, 
                                      dist_mode='default'):
+  """
+    Assigns detections to tracked objects (both represented as bounding boxes). 
+    This method is an extended version of the original from https://github.com/abewley/sort/blob/master/sort.py, 
+    supporting feature vectors, segmentation masks, and different distance calculation modes.
+
+    Args:
+        model (DistNet): The model used for distance predictions.
+        detections (np.ndarray): A numpy array of shape (n, 4) representing the bounding boxes of the detections 
+                                  (each row is [x, y, width, height]).
+        detect_masks (list of np.ndarray): A list of n numpy array of shape ( N, M) representing the masks associated with the detections.
+        trackers (list of KalmanBoxTracker): A list of m KalmanBoxTracker objects that represent the current trackers.
+        pred_masks (list of np.ndarray): A list of m numpy array of shape (N, M) representing the predicted masks for the trackers.
+        feature_vect_detect (list of np.ndarray): A list of n 1x1535 numpy arrays representing feature vectors of the detections.
+        feature_vect (list of np.ndarray): A list of m 1x1535 numpy arrays representing feature vectors of the trackers.
+        n_last_seen (list of floats): A list of m floats representing the last seen time for each tracker.
+        device (torch.device): The device (CPU or GPU) used for computation.
+        iou_threshold (float, optional): The threshold for intersection over union (IoU) used to match detections and trackers. Default is 0.3.
+        dist_mode (str, optional): The method used to calculate the distance. It can be one of:
+            - 'mask': Use IoU of segmentation masks for distance calculation.
+            - 'box': Use IoU of bounding boxes for distance calculation.
+            - 'default': Use Use IoU of segmentation masks and feature vector-based distance calculation.
+
+    Returns:
+        tuple: 
+            - np.ndarray: A numpy array of matched elements of shape (k, 2), where each row is [detection_index, tracker_index] and k is the number of matches.
+            - np.ndarray: A numpy array of unmatched detection indices.
+            - np.ndarray: A numpy array of unmatched tracker indices.
+  """
 
   if(len(trackers)==0):
     return np.empty((0,2),dtype=int), np.arange(len(detections)), np.empty((0,5),dtype=int)
