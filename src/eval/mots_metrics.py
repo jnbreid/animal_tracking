@@ -1,6 +1,6 @@
 """
-the following code is taken from https://github.com/VisualComputingInstitute/mots_tools.git and
-customized to be able to work on the wildlife crossings dataset (the dataset is not included in this repo as it is not publically available)
+The following code is taken from https://github.com/VisualComputingInstitute/mots_tools.git.
+The seqmap file is customized to work with the wildlife crossings dataset. (further information on the dataset can be found in the readme file)
 """
 
 
@@ -13,6 +13,14 @@ import os
 
 
 class SegmentedObject:
+  """
+    Class representing a single segmented object in a frame.
+
+    Attributes:
+        mask (dict): COCO-style RLE encoded binary mask.
+        class_id (int): The object class ID.
+        track_id (int): The unique tracking ID for this object.
+  """
   def __init__(self, mask, class_id, track_id):
     self.mask = mask
     self.class_id = class_id
@@ -20,6 +28,16 @@ class SegmentedObject:
 
 
 def load_sequences(path, seqmap):
+  """
+    Loads all annotated sequences from a directory using a given sequence map.
+
+    Args:
+        path (str): Path to the folder containing sequences or annotation files.
+        seqmap (list): List of sequence names to load.
+
+    Returns:
+        dict: Nested dictionary for a sequence.
+  """
   objects_per_frame_per_sequence = {}
   for seq in seqmap:
     #print("Loading sequence", seq)
@@ -37,6 +55,15 @@ def load_sequences(path, seqmap):
 
 
 def load_txt(path):
+  """
+    Loads object annotations from a TXT file.
+
+    Args:
+        path (str): Path to the .txt annotation file.
+
+    Returns:
+        dict: Dictionary mapping frame numbers to lists of segmented objects.
+  """
   objects_per_frame = {}
   track_ids_per_frame = {}  # To check that no frame contains two objects with same id
   combined_mask_per_frame = {}  # To check that no frame contains overlapping masks
@@ -74,7 +101,6 @@ def load_txt(path):
 
         combined_mask_per_frame[frame] = rletools.merge([combined_mask_per_frame[frame], mask], intersect=False)
 
-        #print('after')
       objects_per_frame[frame].append(SegmentedObject(
         mask,
         class_id,
@@ -85,6 +111,15 @@ def load_txt(path):
 
 
 def load_images_for_folder(path):
+  """
+    Loads segmented object masks from PNG images in a folder.
+
+    Args:
+        path (str): Path to the folder containing segmentation images.
+
+    Returns:
+        dict: Dictionary mapping frame numbers to lists of segmented objects.
+  """
   files = sorted(glob.glob(os.path.join(path, "*.png")))
 
   objects_per_frame = {}
@@ -97,11 +132,30 @@ def load_images_for_folder(path):
 
 
 def filename_to_frame_nr(filename):
+  """
+    Extracts the frame number from a filename.
+
+    Args:
+        filename (str): Filename in the format '000000.png', '000001.png', etc.
+
+    Returns:
+        int: Extracted frame number.
+  """
   assert len(filename) == 10, "Expect filenames to have format 000000.png, 000001.png, ..."
   return int(filename.split('.')[0])
 
 
 def load_image(filename, id_divisor=1000):
+  """
+    Loads a segmentation mask image and returns object instances.
+
+    Args:
+        filename (str): Path to the image file.
+        id_divisor (int): Divisor to extract class ID from object ID.
+
+    Returns:
+        list: List of segmented objects.
+  """
   img = np.array(Image.open(filename))
   obj_ids = np.unique(img)
 
@@ -123,6 +177,17 @@ def load_image(filename, id_divisor=1000):
 
 
 def load_seqmap(seqmap_filename):
+  """
+    Loads a sequence map file specifying sequences and their frame counts.
+
+    Args:
+        seqmap_filename (str): Path to the seqmap file.
+
+    Returns:
+        tuple:
+            - list: List of sequence names.
+            - dict: Mapping from sequence names to their maximum frame count.
+  """
   print("Loading seqmap...")
   seqmap = []
   max_frames = {}
@@ -137,6 +202,13 @@ def load_seqmap(seqmap_filename):
 
 
 def write_sequences(gt, output_folder):
+  """
+    Writes all sequences to the output folder.
+
+    Args:
+        gt (dict): Dictionary mapping sequence names to frame data.
+        output_folder (str): Destination folder path.
+  """
   os.makedirs(output_folder, exist_ok=True)
   for seq, seq_frames in gt.items():
     write_sequence(seq_frames, os.path.join(output_folder, seq + ".txt"))
@@ -144,6 +216,13 @@ def write_sequences(gt, output_folder):
 
 
 def write_sequence(frames, path):
+  """
+    Writes a single sequence's annotations to a text file.
+
+    Args:
+        frames (dict): Dictionary mapping frame numbers to SegmentedObject lists.
+        path (str): Path to save the .txt file.
+  """
   with open(path, "w") as f:
     for t, objects in frames.items():
       for obj in objects:
@@ -161,26 +240,57 @@ IGNORE_CLASS = 10
 
 
 def mask_iou(a, b, criterion="union"):
+  """
+    Computes IoU (intersection over union) between two segmented objects.
+
+    Args:
+        a (SegmentedObject): First object.
+        b (SegmentedObject): Second object.
+        criterion (str): "union" (default) or other criterion for evaluation.
+
+    Returns:
+        float: IoU score between the two masks.
+  """
   is_crowd = criterion != "union"
   return rletools.iou([a.mask], [b.mask], [is_crowd])[0][0]
 
 
 def evaluate_class(gt, results, max_frames, class_id):
+  """
+    Computes MOTS metrics for a specific class.
+
+    Args:
+        gt (dict): Ground truth annotations.
+        results (dict): Predicted annotations.
+        max_frames (dict): Maximum frame count per sequence.
+        class_id (int): Object class ID to evaluate.
+
+    Returns:
+        dict: Computed evaluation metrics for the class.
+  """
   _, results_obj = compute_MOTS_metrics(gt, results, max_frames, class_id, IGNORE_CLASS, mask_iou)
   return results_obj
 
 
 def run_eval(results_folder, gt_folder, seqmap_filename):
+  """
+    Main function to run the MOTS evaluation.
+
+    Args:
+        results_folder (str): Folder containing prediction sequences.
+        gt_folder (str): Folder containing ground truth sequences.
+        seqmap_filename (str): Path to sequence map file.
+
+    Returns:
+        None
+  """
   seqmap, max_frames = load_seqmap(seqmap_filename)
   print("Loading ground truth...")
   gt = load_sequences(gt_folder, seqmap)
   print("Loading results...")
   results = load_sequences(results_folder, seqmap)
-  print("Compute KITTI tracking eval with simplified matching and MOTSA")
-  print("Evaluate class: Cars")
-  results_cars = evaluate_class(gt, results, max_frames, 1)
-  #print("Evaluate class: Pedestrians")
-  #results_ped = evaluate_class(gt, results, max_frames, 2)
-
+  
+  results = evaluate_class(gt, results, max_frames, 1)
+  
 
 
