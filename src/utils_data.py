@@ -2,16 +2,20 @@
 import cv2
 import moviepy.video.io.ImageSequenceClip
 
-"""
-function to read a mp4 file and return a list of all frames in the video
 
-Parameters:
-- file_path (str)
-
-Returns:
-- list (containing f NxM numpy arrays)
-"""
 def read_mp4(file_path):
+  """
+    Reads an MP4 video file and returns a list of frames as numpy arrays.
+
+    This function opens the provided MP4 video file, reads all the frames, and stores them as 
+    numpy arrays. Each frame is converted to RGB format.
+
+    Args:
+        file_path (str): The path to the MP4 video file to be read.
+
+    Returns:
+        list: A list of numpy arrays where each element is an NxMx3 array representing a frame.
+  """
   frames = []
 
   video = cv2.VideoCapture(file_path)
@@ -22,17 +26,21 @@ def read_mp4(file_path):
 
   return frames
 
-"""
-function to generate a mp4 file from image files 
 
-Parameters:
-- imgpaths_list (list containing x strings)
-- fps (int)
-
-Returns:
-- bool
-"""
 def write_mp4(file_path, imgpaths_list, fps = 16):
+    """
+    Generates an MP4 video file from a sequence of image files.
+
+    This function takes a list of image file paths, compiles them into a video sequence.
+
+    Args:
+        file_path (str): The path where the generated MP4 video will be saved.
+        imgpaths_list (list of str): A list of image file paths to be included in the video.
+        fps (int, optional): Frames per second for the generated video. Default is 16.
+
+    Returns:
+        bool: Returns True when the video is successfully written to the file.
+    """
     clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(imgpaths_list, fps=fps)
     clip.write_videofile(file_path)
     return True
