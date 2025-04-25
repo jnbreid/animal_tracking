@@ -12,6 +12,28 @@ def gen_prediction_files(eval_dataset,
                          device = None,
                          dist_mode = 'default'):
     
+    """
+    Runs inference on a dataset of videos and saves detection and segmentation predictions.
+
+    This function processes each video in the dataset by:
+      - Loading frames
+      - Running object detection, segmentation, and feature extraction
+      - Computing distance-based predictions with DistNet
+      - Saving results in specified formats (bounding boxes, segmentation masks)
+
+    Args:
+        eval_dataset (torch dataset): dataset where each item contains a list of image paths
+                             representing frames of a single video. Each item is expected to be 
+                             a tuple/list of (frame_paths, label, metadata).
+        save_dir (str, optional): Directory where prediction files are saved. Defaults to 'out_dir'.
+        distnet_weights (str, optional): Path to pretrained DistNet weights. Defaults to 'weights/distnet_t.pth'.
+        device (torch.device or str, optional): Device to run all models on. Defaults to 'cpu' if not specified.
+        dist_mode (str, optional): Distance computation mode used by DistNet. Defaults to 'default'.
+
+    Returns:
+        None: Outputs are written to disk.
+    """
+    
     if device is None:
         device = 'cpu'
 
