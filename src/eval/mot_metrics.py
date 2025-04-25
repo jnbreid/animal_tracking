@@ -2,11 +2,27 @@ import motmetrics as mm
 # mot metrics can be installed with 'pip install motmetrics'
 import numpy as np
 
-
-# function to evaluate results with prediction and ground truth given as .txt files in mot16 format
-# this function is taken from https://github.com/cheind/py-motmetrics
-
 def motMetricsEnhancedCalculator(gtSource, tSource):
+  """
+    Evaluates tracking performance using MOTChallenge metrics.
+    This function is taken from https://github.com/cheind/py-motmetrics.
+
+    This function compares tracking predictions against ground truth annotations 
+    using the MOT16 format. It computes various MOT metrics using the 
+    `motmetrics` library, such as IDF1, MOTA, MOTP, precision, and recall.
+
+    Args:
+        gtSource (str): File path to the ground truth `.txt` file in MOT16 format.
+        tSource (str): File path to the predicted tracking `.txt` file in MOT16 format.
+
+    Returns:
+        np.ndarray: A 1D array containing metric values in the following order:
+            ['num_frames', 'idf1', 'idp', 'idr', 'recall', 'precision', 
+             'num_objects', 'mostly_tracked', 'partially_tracked', 'mostly_lost', 
+             'num_false_positives', 'num_misses', 'num_switches', 
+             'num_fragmentations', 'mota', 'motp']
+    """
+
   # import required packages
   import motmetrics as mm
   import numpy as np
@@ -61,16 +77,26 @@ def motMetricsEnhancedCalculator(gtSource, tSource):
   return summary.to_numpy()
 
 
-# function to evaluate across multiple videos
-# results are accumulated across all predictions and ground truth data for each video. then the average is calculated
-# the ground truth annotation files are assumed to be in the 'org_anns_path' directory and predicted tracking files in 'prediction_path'
-# the ground truth file and the predicted tracking files are assumed to have identical names
-# files mit have mot16 format (<frame>, <id>, <bb_left>, <bb_top>, <bb_width>, <bb_height>, <conf>, <x>, <y>, <z>)
-
 import os
 import numpy
 
 def eval_set(org_anns_path, prediction_path):
+    """
+    Evaluates tracking performance over a dataset of multiple sequences.
+
+    For each video or sequence in the dataset, this function computes MOT metrics 
+    using the ground truth and predicted files (assumed to be in MOT16 format).
+    The final output is the average of all metric values across the dataset.
+
+    Args:
+        org_anns_path (str): Path to the directory containing ground truth `.txt` files.
+        prediction_path (str): Path to the directory containing prediction `.txt` files.
+                               File names must match those in the ground truth directory.
+
+    Returns:
+        None. Prints the average of each MOT metric across all sequences.
+    """
+
     pred_files = os.listdir(prediction_path)
 
     metrics_results = []
