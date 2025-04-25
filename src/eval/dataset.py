@@ -8,16 +8,18 @@ import json
 from skimage.draw import polygon, polygon2mask
 
 
-"""
-Dataset class for evaluation of the wildlife crossing dataset
-
-"""
 class Wildbrueck(Dataset):
   """
-    PyTorch-compatible dataset class for loading and processing the wildlife crossing dataset.
-    The class handles loading of annotations, bounding boxes, segmentation masks, and optional cross-validation folds.
+  PyTorch-compatible dataset class for loading and processing the wildlife crossing dataset.
+  The class handles loading of annotations, bounding boxes, segmentation masks, and optional cross-validation folds.
 
-    
+  See readme file for further information on the dataset.
+
+  Attributes:
+      dataset_path (string): Path to the directory containing the dataset
+      cross_val_fold (int): integer defining the fold to use
+      train (bool): Defines if training/testing images should be loaded
+  
   """
   def __init__(self, dataset_path, cross_val_fold = None, train=False):
     self.dset_path = dataset_path
