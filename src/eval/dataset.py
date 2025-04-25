@@ -13,6 +13,12 @@ Dataset class for evaluation of the wildlife crossing dataset
 
 """
 class Wildbrueck(Dataset):
+  """
+    PyTorch-compatible dataset class for loading and processing the wildlife crossing dataset.
+    The class handles loading of annotations, bounding boxes, segmentation masks, and optional cross-validation folds.
+
+    
+  """
   def __init__(self, dataset_path, cross_val_fold = None, train=False):
     self.dset_path = dataset_path
 
