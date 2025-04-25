@@ -17,18 +17,34 @@ import wget
 from src.model import DistNet_t
 
 
-"""
-Class to wrap the megadetector to facilitate usability
 
-megadetector can now be directly called
-"""
 class megadetector_wrapper(object):
+    """
+    Wrapper class for the MegaDetector object detection model.
+
+    This wrapper simplifies calling MegaDetector on RGB images by handling the output 
+    format and filtering detections to include only the relevant class (class_id == 0).
+    It can be called directly on an image using the __call__ method.
+
+    Attributes:
+        megadetector: An instance of the MegaDetector model.
+    """
   
     def __init__(self, megadetector):
         self.megadetector = megadetector
 
-    # image must bei in rgb (c,h,w) format
     def __call__(self, image):
+        """
+        Runs the detector on a single RGB image and returns filtered bounding boxes.
+
+        Args:
+            image (np.ndarray): An RGB image (H x W x C format).
+
+        Returns:
+            tuple:
+                - boxes (np.ndarray): Filtered bounding boxes in [x, y, w, h] format.
+                - confidences (np.ndarray): Confidence scores for each detected box.
+        """
         an_boxes = []
         an_confidences = []
         out = self.megadetector.single_image_detection(image)
@@ -51,16 +67,18 @@ class megadetector_wrapper(object):
 
 
 
-"""
-function to load model and pretrained weights for the megadetector
 
-Parameters:
-- device (torch device)
-
-Returns:
-- megadetector_wrapper instance
-"""
 def get_detector(device = None):
+    """
+    Loads a pretrained MegaDetector model and wraps it.
+
+    Args:
+        device (torch.device or str, optional): The device to load the model on.
+                                                Defaults to 'cpu' if not specified.
+
+    Returns:
+        megadetector_wrapper: A wrapped MegaDetector instance ready for inference.
+    """
     if device is None:
         device = 'cpu'
 
@@ -73,16 +91,20 @@ def get_detector(device = None):
 
 
 from segment_anything import sam_model_registry, SamAutomaticMaskGenerator, SamPredictor
-"""
-function to load segmentation model
 
-Parameters:
-- device (torch device)
-
-Returns:
-- SAM instance
-"""
 def get_segmentor(device = None):
+    """
+    Loads and initializes the Segment Anything Model (SAM) for segmentation tasks.
+
+    Downloads the required checkpoint if not already present and returns a predictor object.
+
+    Args:
+        device (torch.device or str, optional): The device to load the model on.
+                                                Defaults to 'cpu'.
+
+    Returns:
+        SamPredictor: An instance of the SAM predictor for segmentation.
+    """
     if device is None:
         device = 'cpu'
 
@@ -101,16 +123,30 @@ def get_segmentor(device = None):
     return mask_predictor
 
 
-
-"""
-Class to wrap megadescriptor and needed transforms to facilitate usage 
-"""
 class megadescriptor_wrapper(object):
+    """
+    Wrapper class for feature extraction using MegaDescriptor.
+
+    Applies preprocessing transforms and returns model output on input image.
+
+    Attributes:
+        megadescriptor: A timm model used for feature extraction.
+        device: The torch device where the model is loaded.
+    """
     def __init__(self, megadescriptor, device):
         self.megadescriptor = megadescriptor
         self.device = device
 
     def __call__(self, image):
+        """
+        Extracts feature vector from a given RGB image.
+
+        Args:
+            image (np.ndarray): An RGB image (H x W x C).
+
+        Returns:
+            torch.Tensor: The feature vector of the image.
+        """
         transform = T.Compose([T.ToTensor(),
                                T.Resize([224, 224]),
                                T.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))])
@@ -119,16 +155,17 @@ class megadescriptor_wrapper(object):
         return output
 
 
-"""
-function to load feature extractor model
-
-Parameters:
-- device (torch device)
-
-Returns:
-- megadescriptor wrapper instance
-"""
 def get_extractor(device = None):
+    """
+    Loads a pretrained MegaDescriptor model for feature extraction.
+
+    Args:
+        device (torch.device or str, optional): The device to load the model on.
+                                                Defaults to 'cpu'.
+
+    Returns:
+        megadescriptor_wrapper: A wrapped feature extractor model.
+    """
     if device is None:
         device = 'cpu'
 
@@ -143,17 +180,19 @@ def get_extractor(device = None):
     return extractor
 
 
-"""
-function to load distnet model
 
-Parameters:
-- device (torch device)
-- weight_path (str)
-
-Returns:
-- DistNet_t object
-"""
 def get_DistNet(device = None, weight_path = None):
+    """
+    Loads the DistNet model and optionally loads pretrained weights.
+
+    Args:
+        device (torch.device or str, optional): The device to load the model on.
+                                                Defaults to 'cpu'.
+        weight_path (str, optional): Path to the pretrained weights file.
+
+    Returns:
+        DistNet_t: An instance of the DistNet model ready for inference.
+    """
     if device is None:
         device = 'cpu'
     
