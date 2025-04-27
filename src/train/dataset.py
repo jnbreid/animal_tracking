@@ -29,7 +29,7 @@ class Wildbrueck_Sim(Dataset):
     for each frame.
 
     Args:
-        dataset_path (str): Root directory containing the dataset folders `predictions/` and `wildbrück_masks/`.
+        dataset_path (str): Root directory containing the dataset folders `predictions/` and `gt_data/`.
         cross_val_fold (int, optional): Fold number to use for cross-validation. If None, all data is used.
         train (bool): If using cross-validation, specifies whether to use the train or test split.
 
@@ -55,7 +55,7 @@ class Wildbrueck_Sim(Dataset):
     elements = []
 
     self.predictions_path = os.path.join(self.dset_path, 'predictions')
-    self.gt_path = os.path.join(self.dset_path, 'wildbrück_masks')
+    self.gt_path = os.path.join(self.dset_path, 'gt_data')
 
     predictions = os.listdir(self.predictions_path)
 
