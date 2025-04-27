@@ -159,6 +159,9 @@ def precompute_gt_box(d_set, save_path, mask_predictor, extractor):
       save_path (str): Directory to save the output .npy files.
       mask_predictor: Segmentation model capable of mask prediction given a box.
       extractor: Feature extractor model to compute embedding vectors from image crops.
+
+  Returns:
+
   """
   for e in range(d_set.__len__()):
     elem = e
@@ -219,6 +222,9 @@ def precompute_pred_box(dataset_path, pre_path, pred_save_path):
       dataset_path (str): Path to dataset containing images and annotations.
       pre_path (str): Path to directory containing precomputed ground truth masks and features.
       pred_save_path (str): Path where predicted masks, features, and boxes will be saved.
+
+  Returns:
+  
   """
 
   s_dset_path = dataset_path

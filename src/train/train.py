@@ -72,14 +72,15 @@ def train(model, loss_fkt, train_loader, val_loader, device, n_epochs = 1500):
         n_epochs (int, optional): Number of training epochs. Defaults to 1500.
 
     Returns:
-        None
+        tuple:
+            - validation loss (list)
+            - train loss (list)
     """
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     writer = None #SummaryWriter('runs/nn_{}'.format(timestamp)) #(install tensorboard to use)
     epoch_number = 0
 
     EPOCHS = n_epochs
-    best_vloss = 1_000_000.
 
     val_loss = []
     trn_loss = []
@@ -112,12 +113,14 @@ def train(model, loss_fkt, train_loader, val_loader, device, n_epochs = 1500):
         val_loss.append(avg_vloss)
 
         trn_loss.append(avg_loss)
-
-        writer.add_scalars('Training vs. Validation Loss', { 'Training' : avg_loss, 'Validation' : avg_vloss }, epoch_number + 1)
-        writer.flush()
+        if writer is not None:
+            writer.add_scalars('Training vs. Validation Loss', { 'Training' : avg_loss, 'Validation' : avg_vloss }, epoch_number + 1)
+            writer.flush()
 
 
         model_path = '/content/models/model_{}'.format(epoch_number)
         torch.save(model.state_dict(), model_path)
 
         epoch_number += 1
+    
+    return val_loss, trn_loss
