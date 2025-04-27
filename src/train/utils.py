@@ -224,7 +224,7 @@ def precompute_pred_box(dataset_path, pre_path, pred_save_path):
       pred_save_path (str): Path where predicted masks, features, and boxes will be saved.
 
   Returns:
-  
+
   """
 
   s_dset_path = dataset_path
@@ -314,13 +314,13 @@ def precompute_pred_box(dataset_path, pre_path, pred_save_path):
     c_box = boxes[:,i]
     c_string = f'{c_box[0]},{c_box[1]},{c_box[2]},{c_box[3]}'
     box_strings.append(c_string)
-  #print(box_strings)
+  
   s_dframe.insert(4, "bbox", box_strings)
 
   s_dframe.drop("region_shape_attributes", axis=1, inplace=True)
   
   """
-  now for each tracklet kalman filter is applied and
+  now for each tracklet kalman filter is applied
   """
 
   s_elements = []
