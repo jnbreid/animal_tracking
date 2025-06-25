@@ -212,7 +212,7 @@ def precompute_gt_box(d_set, save_path, mask_predictor, extractor):
 
 import sys
 sys.path.insert(0, '..')
-from track import KalmanBoxTracker
+from src.track import KalmanBoxTracker
 
 def precompute_pred_box(dataset_path, pre_path, pred_save_path):
   """

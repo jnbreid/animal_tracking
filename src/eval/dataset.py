@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-only
+# Copyright (c) 2025 Jon Breid
+
 from torch.utils.data import Dataset
 import os
 import pandas as pd

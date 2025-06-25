@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-only
+# Copyright (c) 2025 Jon Breid
+
 from sklearn.metrics import jaccard_score
 import numpy as np
 import matplotlib.colors
@@ -30,6 +33,9 @@ def iou_batch(bb_test, bb_gt):#bb_test, bb_gt):
   """
   Computes pairwise IoU between bounding boxes.
   This function is taken from https://github.com/abewley/sort/blob/master/sort.py
+
+  Originally licensed under the GNU General Public License v3.0.
+  Original Copyright (C) 2016–2020 Alex Bewley <alex@bewley.ai>
 
   Parameters:
   - bb_test (ndarray): Array of shape (n, 4) with test bounding boxes.
@@ -147,6 +153,9 @@ def convert_bbox_to_z(bbox):
   Here x,y is the centre of the box and s is the scale/area and r is the aspect ratio.
   This function is taken from https://github.com/abewley/sort/blob/master/sort.py
 
+  Originally licensed under the GNU General Public License v3.0.
+  Original Copyright (C) 2016–2020 Alex Bewley <alex@bewley.ai>
+
   Parameters:
   - bbox (ndarray): Bounding box as [x1, y1, x2, y2].
 
@@ -166,6 +175,9 @@ def convert_x_to_bbox(x,score=None):
   """
   Converts [x, y, s, r] box format back to [x1, y1, x2, y2] format.
   This function is taken from https://github.com/abewley/sort/blob/master/sort.py
+
+  Originally licensed under the GNU General Public License v3.0.
+  Original Copyright (C) 2016–2020 Alex Bewley <alex@bewley.ai>
 
   Parameters:
   - x (ndarray): Array with [x, y, s, r].

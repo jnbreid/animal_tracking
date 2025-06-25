@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-only
+# Copyright (c) 2025 Jon Breid
+
 import numpy as np
 import time
 from filterpy.kalman import KalmanFilter
@@ -9,6 +12,9 @@ class KalmanBoxTracker(object):
   This class represents the internal state of individual tracked objects observed as bounding boxes.
   It extends the original tracker from https://github.com/abewley/sort/blob/master/sort.py to support 
   feature vectors and segmentation masks, in addition to the bounding box information.
+
+  Originally licensed under the GNU General Public License v3.0.
+  Original Copyright (C) 2016–2020 Alex Bewley <alex@bewley.ai>
   """
   
   count = 0
@@ -169,6 +175,9 @@ def associate_detections_to_trackers(model,
     This method is an extended version of the original from https://github.com/abewley/sort/blob/master/sort.py, 
     supporting feature vectors, segmentation masks, and different distance calculation modes.
 
+    Originally licensed under the GNU General Public License v3.0.
+    Original Copyright (C) 2016–2020 Alex Bewley <alex@bewley.ai>
+
     Args:
         model (DistNet): The model used for distance predictions.
         detections (np.ndarray): A numpy array of shape (n, 4) representing the bounding boxes of the detections 
@@ -245,6 +254,9 @@ class Tracker(object):
     Tracker for managing multiple tracked objects across video frames.
     This class extends the original tracker from https://github.com/abewley/sort/blob/master/sort.py to support
     feature vectors, segmentation masks, and different modes for distance calculation.
+
+    Originally licensed under the GNU General Public License v3.0.
+    Original Copyright (C) 2016–2020 Alex Bewley <alex@bewley.ai>
 
     Attributes:
         model (DistNet): The model used for distance predictions.

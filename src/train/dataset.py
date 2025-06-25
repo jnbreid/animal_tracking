@@ -1,9 +1,12 @@
+# SPDX-License-Identifier: GPL-3.0-only
+# Copyright (c) 2025 Jon Breid
+
 import os
 import torch
 import gc
 
 import pandas as pd
-import numpa as np
+import numpy as np
 
 from torch.utils.data import Dataset
 from sklearn.metrics.pairwise import cosine_similarity

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: GPL-3.0-only
+# Copyright (c) 2025 Jon Breid
 
 import os
 import numpy as np

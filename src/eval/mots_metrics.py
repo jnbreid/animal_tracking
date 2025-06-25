@@ -1,5 +1,8 @@
 """
 The following code is taken from https://github.com/VisualComputingInstitute/mots_tools.git.
+
+Copyright (c) 2019 Visual Computing Institute
+
 The seqmap file is customized to work with the wildlife crossings dataset. (further information on the dataset can be found in the readme file)
 """
 

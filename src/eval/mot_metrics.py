@@ -7,6 +7,10 @@ def motMetricsEnhancedCalculator(gtSource, tSource):
     Evaluates tracking performance using MOTChallenge metrics.
     This function is taken from https://github.com/cheind/py-motmetrics.
 
+    Copyright (c) 2017-2022 Christoph Heindl
+    Copyright (c) 2018 Toka
+    Copyright (c) 2019-2022 Jack Valmadre
+
     This function compares tracking predictions against ground truth annotations 
     using the MOT16 format. It computes various MOT metrics using the 
     `motmetrics` library, such as IDF1, MOTA, MOTP, precision, and recall.
